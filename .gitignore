@@ -2,8 +2,12 @@
 *.sublime-project
 *.sublime-workspace
 # Composer
-/vendor/
+vendor
 # PHPStorm
 .idea/
 # environment file
 .env
+# Codeception
+tests/_data
+tests/_output
+
