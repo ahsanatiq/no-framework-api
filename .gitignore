@@ -1,0 +1,9 @@
+# SublimeText
+*.sublime-project
+*.sublime-workspace
+# Composer
+/vendor/
+# PHPStorm
+.idea/
+# environment file
+.env
