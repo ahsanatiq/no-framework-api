@@ -8,5 +8,8 @@ actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: http://localhost/myapp
+            url: http://recipe-service/
         - \Helper\Acceptance
+        - REST:
+            depends: PhpBrowser
+            url: 'http://recipe-service/'
