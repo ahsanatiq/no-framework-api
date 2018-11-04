@@ -2,89 +2,91 @@
 namespace App;
 
 use App\Exceptions\ExceptionHandler;
-use Illuminate\Config\Repository;
+use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Container\Container;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Events\Dispatcher as EventsDispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Symfony\Component\Finder\Finder;
+use Illuminate\Database\Capsule\Manager as DbCapsule;
 
 class Application
 {
-    private $container;
-    private $config;
-    private $request;
-    private $router;
-    private static $instance = null;
+    public $container;
+    public $config;
+    public $db;
+    public $events;
+    public $finder;
+    public $request;
+    public $response;
+    public $router;
 
-    public function __construct()
+    public function __construct(
+        ConfigRepository $config,
+        DbCapsule $db,
+        EventsDispatcher $events,
+        Finder $finder,
+        Request $request,
+        Response $response,
+        Router $router
+    )
     {
-        $this->container = new Container;
-    }
+        $this->container = Container::getInstance();
+        $this->config    = $config;
+        $this->db        = $db;
+        $this->events    = $events;
+        $this->finder    = $finder;
+        $this->request   = $request;
+        $this->response  = $response;
+        $this->router    = $router;
 
-    public function getInstance()
-    {
-        if (self::$instance == null) {
-            self::$instance = new Application();
-        }
-
-        return self::$instance;
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
+        $this->registerConfig();
+        $this->registerRoutes();
+        $this->registerDbConnection();
+        $this->registerRepositories();
     }
 
     public function run()
     {
         try {
-            $this->config = $this->bootstrapConfig();
-            $this->request = $this->bootstrapRequest();
-            $this->router = $this->bootstrapRouter();
             $response = $this->router->dispatch($this->request);
             // Send the response back to the browser
             $response->send();
         } catch (\Exception $e) {
-            ExceptionHandler::handle($e);
+            ExceptionHandler::handle($e, $this->request);
         }
     }
 
-    private function bootstrapRouter()
-    {
-        // Initialize Router
-        $events = new Dispatcher($this->container);
-        $router = new Router($events, $this->container);
-        $this->container->instance('router', $router);
-        $finder = new Finder();
-        $finder->files()->in(__DIR__.'/../routes/');
-        foreach ($finder as $file) {
-            require($file->getRealPath());
-        }
-        return $router;
-    }
-
-    private function bootstrapRequest()
-    {
-        $request = Request::capture();
-        $this->container->instance('Illuminate\Http\Request', $request);
-        $this->container->alias('Illuminate\Http\Request', 'request');
-        return $request;
-    }
-
-    private function bootstrapConfig()
+    private function registerConfig()
     {
         $configItems = [];
-        $finder = new Finder();
-        $finder->files()->in(__DIR__.'/../config/');
-        foreach ($finder as $file) {
+        $this->finder->files()->in(__DIR__.'/../config/');
+        foreach ($this->finder as $file) {
             $configItems = array_merge($configItems, [
                 $file->getBasename('.php') => require($file->getRealPath())
             ]);
         }
-        $config = new Repository($configItems);
-        $this->container->instance('config', $config);
-        return $config;
+        $this->config->set($configItems);
+    }
+
+    private function registerRoutes()
+    {
+        $this->finder->files()->in(__DIR__.'/../routes/');
+        foreach ($this->finder as $file) {
+            $router = $this->router;
+            require($file->getRealPath());
+        }
+    }
+
+    private function registerDbConnection()
+    {
+        $this->db->addConnection($this->config['db'][$this->config['db.default']]);
+    }
+
+    private function registerRepositories()
+    {
+        $this->container->bind('App\Repositories\Contracts\RecipeRepositoryInterface',
+                               'App\Repositories\Eloquent\RecipeRepository');
     }
 }

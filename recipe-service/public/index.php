@@ -1,4 +1,4 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
 
-app()->run();
+$app = require(__DIR__ . '/../bootstrap/app.php');
+$app->run();
