@@ -10,4 +10,5 @@ vendor
 # Codeception
 tests/_data
 tests/_output
-
+# Mac
+.DS_Store
