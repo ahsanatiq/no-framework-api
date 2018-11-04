@@ -8,11 +8,11 @@ class ConfigTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        app()->run();
+        // app()->run();
     }
 
     // tests
-    public function testAppConfig()
+    public function testAppConfiguration()
     {
         $appConfig = config()->get('app');
         $this->assertNotEmpty($appConfig);
@@ -21,7 +21,7 @@ class ConfigTest extends \Codeception\Test\Unit
         $this->assertArrayHasKey('url', $appConfig);
     }
 
-    public function testDbConfig()
+    public function testDatabaseConfiguration()
     {
         $DbConfig = config()->get('db');
         $this->assertNotEmpty($DbConfig);

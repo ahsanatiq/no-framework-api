@@ -1,72 +1,108 @@
 <?php
+
 class ApplicationTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
      */
     protected $tester;
+    protected $app;
+
+    // include the bootstrap file that is needed for initializing application
+    public static function setUpBeforeClass() {
+        // require codecept_root_dir('bootstrap/app.php');
+    }
 
     public function _before()
     {
-        app()->run();
+       $this->container = Illuminate\Container\Container::getInstance();
+       $this->app = $this->container->make('app');
     }
 
     // tests
     public function testApplicationInstance()
     {
-        $app = new App\Application();
         $this->assertInstanceOf(
             \App\Application::class,
-            $app
+            $this->app
         );
     }
+
 
     public function testContainerInstanceInsideApplication()
     {
-        $app = new App\Application();
         $this->assertInstanceOf(
             Illuminate\Container\Container::class,
-            $app->getContainer()
+            $this->app->container
+        );
+
+        $this->assertEquals(
+            Illuminate\Container\Container::getInstance(),
+            $this->app->container
         );
     }
 
-    public function testRouterInstanceInsideContainer()
+    public function testRouterInstanceInsideApplication()
     {
-        $router = container()->make('router');
+        $router = $this->app->router;
         $this->assertInstanceOf(
             Illuminate\Routing\Router::class,
             $router
         );
     }
 
-    public function testRequestInstanceInsideContainer()
+
+
+    public function testRequestInstanceInsideApplication()
     {
-        $request = container()->make('request');
+        $request = $this->app->request;
         $this->assertInstanceOf(
             Illuminate\Http\Request::class,
             $request
         );
     }
 
+    public function testEventsInstanceInsideApplication()
+    {
+        $events = $this->app->events;
+        $this->assertInstanceOf(
+            Illuminate\Events\Dispatcher::class,
+            $events
+        );
+    }
+
+    public function testConfigInstanceInsideApplication()
+    {
+        $config = $this->app->config;
+        $this->assertInstanceOf(
+            Illuminate\Config\Repository::class,
+            $config
+        );
+    }
+
+    public function testSymfonyFinderInstanceInsideApplication()
+    {
+        $finder = $this->app->finder;
+        $this->assertInstanceOf(
+            Symfony\Component\Finder\Finder::class,
+            $finder
+        );
+    }
+
+    public function testDBInstanceInsideApplication()
+    {
+        $db = $this->app->db;
+        $this->assertInstanceOf(
+            Illuminate\Database\Capsule\Manager::class,
+            $db
+        );
+    }
+
     public function testApplicationSingletonInstances()
     {
-        $app1 = new App\Application();
-        $app2 = new App\Application();
-        $this->assertNotSame(
-            $app1,
-            $app2
-        );
-
-        $app1 = App\Application::getInstance();
-        $app2 = App\Application::getInstance();
+        $app1 = $this->container->make('app');
+        $app2 = $this->container->make('app');
         $this->assertSame(
-            $app1,
-            $app2
-        );
-
-        $app1 = App\Application::getInstance();
-        $app2 = new App\Application();
-        $this->assertNotSame(
             $app1,
             $app2
         );
@@ -82,29 +118,18 @@ class ApplicationTest extends \Codeception\Test\Unit
         );
 
         $app1 = app();
-        $app2 = App\Application::getInstance();
+        $app2 = $this->app;
+        $this->assertSame(
+            $app1,
+            $app2
+        );
+
+        $app1 = app();
+        $app2 = $this->container->make('app');
         $this->assertSame(
             $app1,
             $app2
         );
     }
 
-    public function testHelperFunctions()
-    {
-        $this->assertInstanceOf(
-            \App\Application::class,
-            app()
-        );
-
-        $this->assertInstanceOf(
-            Illuminate\Container\Container::class,
-            container()
-        );
-
-        $this->assertInstanceOf(
-            Illuminate\Config\Repository::class,
-            config()
-        );
-
-    }
 }
