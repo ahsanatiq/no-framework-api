@@ -9,7 +9,8 @@ abstract class BaseValidator
     protected $validator;
     protected $mode;
 
-    public function __construct(ValidationFactory $validator) {
+    public function __construct(ValidationFactory $validator)
+    {
         $this->validator = $validator;
     }
 
@@ -18,7 +19,8 @@ abstract class BaseValidator
         $this->mode = $mode;
     }
 
-    public function validate($data, $rules = [], $custom_errors = []) {
+    public function validate($data, $rules = [], $custom_errors = [])
+    {
         if (empty($rules) && !empty($this->rules) && is_array($this->rules)) {
             //no rules passed to function, use the default rules defined in sub-class
             $rules = $this->rules;
