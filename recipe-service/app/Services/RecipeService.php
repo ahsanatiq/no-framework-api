@@ -2,18 +2,24 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\RecipeRepositoryInterface;
+use App\Services\Validators\RatingValidator;
 use App\Services\Validators\RecipeValidator;
 
 class RecipeService extends BaseService
 {
     private $recipeRepository;
-    private $validator;
-    // private $rating;
+    private $recipeValidator;
+    private $ratingValidator;
 
-    public function __construct(RecipeRepositoryInterface $recipeRepository, RecipeValidator $validator)
+    public function __construct(
+        RecipeRepositoryInterface $recipeRepository,
+        RecipeValidator $recipeValidator,
+        RatingValidator $ratingValidator
+    )
     {
         $this->recipeRepository = $recipeRepository;
-        $this->validator = $validator;
+        $this->recipeValidator = $recipeValidator;
+        $this->ratingValidator = $ratingValidator;
     }
 
     public function getAll()
@@ -33,14 +39,14 @@ class RecipeService extends BaseService
 
     public function create($data)
     {
-        $this->validator->validate($data);
+        $this->recipeValidator->validate($data);
         return $this->recipeRepository->create($data);
     }
 
     public function update($data, $id)
     {
-        $this->validator->setMode('update');
-        $this->validator->validate($data);
+        $this->recipeValidator->setMode('update');
+        $this->recipeValidator->validate($data);
 
         $recipe = $this->getById($id);
         return $this->recipeRepository->update($data, $recipe['id']);
@@ -50,6 +56,12 @@ class RecipeService extends BaseService
     {
         $recipe = $this->getById($id);
         return $this->recipeRepository->delete($recipe['id']);
+    }
+
+    public function createRating($data, $recipeId)
+    {
+        $this->ratingValidator->validate($data);
+        return $this->recipeRepository->createRating($data, $recipeId);
     }
 
 }
