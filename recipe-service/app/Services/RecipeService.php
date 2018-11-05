@@ -1,9 +1,11 @@
 <?php
 namespace App\Services;
 
+use App\Events\NewRatingCreatedEvent;
 use App\Repositories\Contracts\RecipeRepositoryInterface;
 use App\Services\Validators\RatingValidator;
 use App\Services\Validators\RecipeValidator;
+use Illuminate\Support\Collection;
 
 class RecipeService extends BaseService
 {
@@ -61,7 +63,14 @@ class RecipeService extends BaseService
     public function createRating($data, $recipeId)
     {
         $this->ratingValidator->validate($data);
-        return $this->recipeRepository->createRating($data, $recipeId);
+        $rating = $this->recipeRepository->createRating($data, $recipeId);
+        dispatcher()->dispatch(new NewRatingCreatedEvent($recipeId, $rating));
+        return $this->getById($recipeId);
+    }
+
+    public function updateRating($recipeId)
+    {
+        return $this->recipeRepository->updateRating($recipeId);
     }
 
 }

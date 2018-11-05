@@ -40,6 +40,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     {
         $maxid = $this->recipes->max('id');
         $data['id'] = $maxid ? ++$maxid : 1;
+        $data['rating'] = '0';
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['updated_at'] = date('Y-m-d H:i:s');
         $this->recipes->push($data);
@@ -50,7 +51,14 @@ class RecipeRepository implements RecipeRepositoryInterface
     {
         $data = new Collection($data);
         $recipe = $this->getById($id);
-        $updatedRecipe = array_merge($recipe, $data->only('name','description','prep_time','difficulty','vegetarian')->all());
+        $updatedRecipe = array_merge($recipe, $data->only(
+            'name',
+            'description',
+            'prep_time',
+            'difficulty',
+            'vegetarian',
+            'rating'
+        )->all());
         $this->recipes = $this->recipes->keyBy('id');
         $this->recipes->put($id, $updatedRecipe);
         return $updatedRecipe;
@@ -71,6 +79,14 @@ class RecipeRepository implements RecipeRepositoryInterface
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['updated_at'] = date('Y-m-d H:i:s');
         $this->ratings->push($data);
+        return $recipe;
+    }
+
+    public function updateRating($id)
+    {
+        $recipe = $this->getById($id);
+        $rating = $this->ratings->where('recipe_id', $id)->average('rating');
+        $recipe = $this->update(['rating' => round($rating,2)], $id);
         return $recipe;
     }
 

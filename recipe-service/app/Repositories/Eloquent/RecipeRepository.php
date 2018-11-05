@@ -31,9 +31,9 @@ class RecipeRepository implements RecipeRepositoryInterface
         );
     }
 
-    public function getById($id)
+    public function getById($recipeId)
     {
-        $recipe = $this->recipeModel->find($id);
+        $recipe = $this->recipeModel->find($recipeId);
         if(!$recipe)
         {
             throw new RecipeNotFoundException;
@@ -46,31 +46,43 @@ class RecipeRepository implements RecipeRepositoryInterface
         return $this->recipeModel->create($data);
     }
 
-    public function update($data, $id)
+    public function update($data, $recipeId)
     {
-        $recipe = $this->getById($id);
+        $recipe = $this->getById($recipeId);
         if($recipe->update($data)) {
             return $recipe;
         }
         throw new UnexpectedException;
     }
 
-    public function delete($id)
+    public function delete($recipeId)
     {
-        $recipe = $this->getById($id);
+        $recipe = $this->getById($recipeId);
         if($recipe->delete()) {
             return true;
         }
         throw new UnexpectedException;
     }
 
-    public function createRating($data, $id)
+    public function createRating($data, $recipeId)
     {
-        $recipe = $this->getById($id);
+        $recipe = $this->getById($recipeId);
         $rating = $recipe->ratings()->create($data);
         if($rating)
         {
-            return $this->getById($id);
+            return rating;
+        }
+        throw new UnexpectedException;
+    }
+
+    public function updateRating($recipeId)
+    {
+        $recipe = $this->getById($recipeId);
+        $rating = $recipe->ratings()->average('rating')->get();
+        $recipe->rating = $rating;
+        if($recipe->save())
+        {
+            return $recipe;
         }
         throw new UnexpectedException;
     }
