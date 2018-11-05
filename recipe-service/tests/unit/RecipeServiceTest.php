@@ -356,6 +356,66 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->recipeService->getById($recipe['result']['id']);
     }
 
+    public function testValidationWithWrongRecipeIdWhenCreatingRating()
+    {
+        $this->expectException(RecipeNotFoundException::class);
+        $this->expectExceptionMessage('Recipe not found.');
+        $this->expectExceptionCode(404);
+        $ratingData = $this->generateRatingData();
+        $ratedRecipe = $this->recipeService->createRating($ratingData, $this->faker->numberBetween(10,10000));
+    }
+
+    public function testValidationWithRatingRequiredWhenCreatingRating()
+    {
+        $recipe = $this->createRecipe();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('The rating field is required.');
+        $this->expectExceptionCode(422);
+        $ratingData = $this->generateRatingData();
+        $ratingData['rating'] = '';
+        $ratedRecipe = $this->recipeService->createRating($ratingData, $recipe['result']['id']);
+    }
+
+    public function testValidationWithRatingNumericWhenCreatingRating()
+    {
+        $recipe = $this->createRecipe();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('The rating must be a number.');
+        $this->expectExceptionCode(422);
+        $ratingData = $this->generateRatingData();
+        $ratingData['rating'] = $this->faker->randomElement(['a','abc',true]);
+        $ratedRecipe = $this->recipeService->createRating($ratingData, $recipe['result']['id']);
+    }
+
+    public function testValidationWithRatingZeroWhenCreatingRating()
+    {
+        $recipe = $this->createRecipe();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('The rating must be between 1 and 5.');
+        $this->expectExceptionCode(422);
+        $ratingData = $this->generateRatingData();
+        $ratingData['rating'] = 0;
+        $ratedRecipe = $this->recipeService->createRating($ratingData, $recipe['result']['id']);
+    }
+
+    public function testValidationWithRatingRangeWhenCreatingRating()
+    {
+        $recipe = $this->createRecipe();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('The rating must be between 1 and 5.');
+        $this->expectExceptionCode(422);
+        $ratingData = $this->generateRatingData();
+        $ratingData['rating'] = $this->faker->numberBetween(6,1000);
+        $ratedRecipe = $this->recipeService->createRating($ratingData, $recipe['result']['id']);
+    }
+
+    public function testRatingRecipeWithSuccess()
+    {
+        $recipe = $this->createRecipe();
+        $ratingRecipe = $this->createRating($recipe['result']['id']);
+        $this->assertEquals($recipe['result'], $ratingRecipe['result']);
+    }
+
     public function createRecipe()
     {
         $data = $this->generateRecipeData();
@@ -371,6 +431,20 @@ class RecipeServiceTest extends \Codeception\Test\Unit
             'prep_time'   => $this->faker->numberBetween(1, 9999),
             'difficulty'  => $this->faker->numberBetween(1, 3),
             'vegetarian'  => $this->faker->randomElement([true, false])
+        ];
+    }
+
+    public function createRating($recipeId)
+    {
+        $data = $this->generateRatingData();
+        $recipe = $this->recipeService->createRating($data, $recipeId);
+        return ['original'=>$data, 'result'=>$recipe];
+    }
+
+    public function generateRatingData()
+    {
+        return [
+            'rating'  => $this->faker->numberBetween(1, 5)
         ];
     }
 
