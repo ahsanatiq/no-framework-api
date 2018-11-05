@@ -21,11 +21,11 @@ $config = new ConfigRepository;
 $container->instance('Illuminate\Config\Repository', $config);
 $container->alias('Illuminate\Config\Repository', 'config');
 
-$events = new Dispatcher($container);
-$container->instance('Illuminate\Events\Dispatcher', $events);
+$dispatcher = new Dispatcher($container);
+$container->instance('Illuminate\Events\Dispatcher', $dispatcher);
 $container->alias('Illuminate\Events\Dispatcher', 'dispatcher');
 
-$router = new Router($events, $container);
+$router = new Router($dispatcher, $container);
 $container->instance('Illuminate\Routing\Router', $router);
 $container->alias('Illuminate\Routing\Router', 'router');
 
@@ -38,7 +38,7 @@ $container->instance('Illuminate\Http\Request', $request);
 $container->alias('Illuminate\Http\Request', 'request');
 
 $capsule = new DbCapsule($container);
-$capsule->setEventDispatcher($events);
+$capsule->setEventDispatcher($dispatcher);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $container->instance('Illuminate\Database\Capsule\Manager', $capsule);

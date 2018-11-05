@@ -18,6 +18,13 @@ if (!function_exists('app')) {
 if (!function_exists('config')) {
     function config()
     {
-        return container()->make('Illuminate\Config\Repository');
+        return container()->make('config');
+    }
+}
+
+if (!function_exists('dispatcher')) {
+    function dispatcher()
+    {
+        return container()->make('dispatcher');
     }
 }

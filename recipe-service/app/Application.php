@@ -45,6 +45,7 @@ class Application
         $this->registerRoutes();
         $this->registerDbConnection();
         $this->registerRepositories();
+        $this->registerEvents();
     }
 
     public function run()
@@ -86,7 +87,13 @@ class Application
 
     private function registerRepositories()
     {
-        $this->container->bind('App\Repositories\Contracts\RecipeRepositoryInterface',
-                               'App\Repositories\Eloquent\RecipeRepository');
+        $this->container->bind(App\Repositories\Contracts\RecipeRepositoryInterface::class,
+                               App\Repositories\Eloquent\RecipeRepository::class);
+    }
+
+    private function registerEvents()
+    {
+        $this->events->listen([\App\Events\NewRatingCreatedEvent::class],
+                               \App\Listeners\UpdateRecipeRating::class);
     }
 }
