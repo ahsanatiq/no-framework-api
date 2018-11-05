@@ -7,7 +7,7 @@ class CreateRatings extends AbstractMigration
 {
     public function change()
     {
-        $table = $this->table('ratings');
+        $table = $this->table('ratings', ['id' => false]);
         $table
         ->addColumn('rating', 'integer', ['limit' => 1])
         ->addColumn('recipe_id', 'integer')
