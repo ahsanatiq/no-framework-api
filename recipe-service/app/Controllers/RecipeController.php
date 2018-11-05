@@ -61,5 +61,12 @@ class RecipeController extends BaseController
         return $this->recipeService->delete($recipeId);
     }
 
-
+    public function createRating($recipeId, Request $request)
+    {
+        $recipe = $this->recipeService->createRating($request->all(), $recipeId);
+        return $this->toFractalResponse(
+            $newRecipe,
+            $this->recipeTransformer
+        );
+    }
 }
