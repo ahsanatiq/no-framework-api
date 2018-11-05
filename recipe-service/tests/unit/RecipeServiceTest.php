@@ -19,7 +19,8 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->faker = Faker\Factory::create();
         container()->bind(
             'App\Repositories\Contracts\RecipeRepositoryInterface',
-            'App\Repositories\Collection\RecipeRepository'
+            'App\Repositories\Collection\RecipeRepository',
+            true
         );
         container()->bind('recipeService', 'App\Services\RecipeService');
         $this->recipeService = container()->make('recipeService');
@@ -411,15 +412,37 @@ class RecipeServiceTest extends \Codeception\Test\Unit
 
     public function testRatingRecipeWithSuccess()
     {
-        $recipe = $this->createRecipe();
-        $ratingRecipe = $this->createRating($recipe['result']['id']);
-        $this->assertEquals($recipe['result'], $ratingRecipe['result']);
+        for($i=1; $i<=3; $i++)
+        {
+            $recipe = $this->createRecipe();
+            $this->assertEquals($recipe['result']['rating'],0);
+            $ratingSum=0;
+            for($j=1; $j<=10; $j++)
+            {
+                $rating = $this->createRating($recipe['result']['id']);
+                $ratingSum+=$rating['original']['rating'];
+                $ratingAverage = round($ratingSum/$j, 2);
+                $this->assertEquals($ratingAverage, $rating['result']['rating']);
+                $checkRecipe = $this->recipeService->getById($recipe['result']['id']);
+                $this->assertEquals($ratingAverage, $checkRecipe['rating']);
+                codecept_debug('recipe_id:'.$recipe['result']['id'].
+                               ', rating:'.$rating['original']['rating'].
+                               ', overall:'.$ratingAverage);
+            }
+        }
     }
 
     public function createRecipe()
     {
         $data = $this->generateRecipeData();
         $recipe = $this->recipeService->create($data);
+        return ['original'=>$data, 'result'=>$recipe];
+    }
+
+    public function createRating($recipeId)
+    {
+        $data = $this->generateRatingData();
+        $recipe = $this->recipeService->createRating($data, $recipeId);
         return ['original'=>$data, 'result'=>$recipe];
     }
 
@@ -432,13 +455,6 @@ class RecipeServiceTest extends \Codeception\Test\Unit
             'difficulty'  => $this->faker->numberBetween(1, 3),
             'vegetarian'  => $this->faker->randomElement([true, false])
         ];
-    }
-
-    public function createRating($recipeId)
-    {
-        $data = $this->generateRatingData();
-        $recipe = $this->recipeService->createRating($data, $recipeId);
-        return ['original'=>$data, 'result'=>$recipe];
     }
 
     public function generateRatingData()
