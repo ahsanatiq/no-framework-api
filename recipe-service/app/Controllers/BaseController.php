@@ -9,7 +9,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
-class BaseController
+abstract class BaseController
 {
     public function toFractalResponse($data, $transformer, LengthAwarePaginator $paginator = null)
     {
