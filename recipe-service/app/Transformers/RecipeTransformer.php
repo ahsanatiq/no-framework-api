@@ -16,7 +16,7 @@ class RecipeTransformer extends TransformerAbstract
             'difficulty'      => (int) $recipe->difficulty,
             'prep_time'       => (int) $recipe->prep_time,
             'vegetarian'      => (bool) $recipe->vegetarian,
-            // 'rating'  => round($recipe->ratings->avg('rating'), 2),
+            'rating'          => (float) round($recipe->rating, 2),
             'created_at'      => $recipe->created_at->format(\DateTime::ATOM),
             'updated_at'      => $recipe->updated_at->format(\DateTime::ATOM),
         ];
