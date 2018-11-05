@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Eloquent;
 
+use App\Exceptions\RecipeNotFoundException;
 use App\Exceptions\UnexpectedException;
 use App\Models\Recipe;
 use App\Repositories\Contracts\RecipeRepositoryInterface;
@@ -32,7 +33,12 @@ class RecipeRepository implements RecipeRepositoryInterface
 
     public function getById($id)
     {
-        return $this->recipeModel->findorFail($id);
+        $recipe = $this->recipeModel->find($id);
+        if(!$recipe)
+        {
+            throw new RecipeNotFoundException;
+        }
+        return $recipe;
     }
 
     public function create($data)

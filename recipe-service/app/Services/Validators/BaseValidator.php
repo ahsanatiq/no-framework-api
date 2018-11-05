@@ -32,6 +32,7 @@ abstract class BaseValidator
                         return true;
                     }
                 });
+                return $rule;
             }, $rules);
         }
 

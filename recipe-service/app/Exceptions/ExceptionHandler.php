@@ -2,11 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\NotFoundHttpException as AppNotFoundHttpException;
+use App\Exceptions\RecipeNotFoundException;
 use App\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Exceptions\NotFoundHttpException as AppNotFoundHttpException;
 
 class ExceptionHandler
 {
@@ -19,9 +20,13 @@ class ExceptionHandler
             case $e instanceof ValidationException:
                 $data = $e->getData();
                 break;
+            case $e instanceof RecipeNotFoundException:
+                $data = $e->getData();
+                break;
             default:
                 $data = (new UnexpectedException)->getData();
                 if (config()->get('app.env') != 'production') {
+                    $data['type'] = get_class($e);
                     $data['message'] = $e->getMessage();
                 }
                 break;

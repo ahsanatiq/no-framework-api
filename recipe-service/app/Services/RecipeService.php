@@ -43,13 +43,13 @@ class RecipeService extends BaseService
         $this->validator->validate($data);
 
         $recipe = $this->getById($id);
-        return $this->recipeRepository->update($data, $recipe->id);
+        return $this->recipeRepository->update($data, $recipe['id']);
     }
 
     public function delete($id)
     {
         $recipe = $this->getById($id);
-        return $this->recipeRepository->delete($recipe->id);
+        return $this->recipeRepository->delete($recipe['id']);
     }
 
 }

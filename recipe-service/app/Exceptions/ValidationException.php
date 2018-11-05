@@ -6,7 +6,7 @@ class ValidationException extends BaseException
 {
     public function __construct( $errors = null, $message = null, $code = 0, Exception $previous = null ) {
         $this->setErrors( $errors );
-        parent::__construct( $message, 422, $previous );
+        parent::__construct( $this->errors->first(), 422, $previous );
     }
 
     protected function setErrors( $errors ) {
