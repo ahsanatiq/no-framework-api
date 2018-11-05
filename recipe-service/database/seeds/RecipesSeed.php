@@ -16,6 +16,7 @@ class RecipesSeed extends AbstractSeed
                 'prep_time'   => $faker->numberBetween(10, 60),
                 'difficulty'  => $faker->numberBetween(1, 3),
                 'vegetarian'  => $faker->randomElement([true, false]),
+                'rating'      => $faker->numberBetween(1, 5),
                 'created_at'  => date('Y-m-d H:i:s'),
                 'updated_at'  => date('Y-m-d H:i:s'),
             ];
