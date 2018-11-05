@@ -63,4 +63,15 @@ class RecipeRepository implements RecipeRepositoryInterface
         }
         throw new UnexpectedException;
     }
+
+    public function createRating($data, $id)
+    {
+        $recipe = $this->getById($id);
+        $rating = $recipe->ratings()->create($data);
+        if($rating)
+        {
+            return $this->getById($id);
+        }
+        throw new UnexpectedException;
+    }
 }

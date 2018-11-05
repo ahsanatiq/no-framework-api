@@ -8,10 +8,12 @@ use Illuminate\Support\Collection;
 class RecipeRepository implements RecipeRepositoryInterface
 {
     private $recipes;
+    private $ratings;
 
     function __construct()
     {
         $this->recipes = new Collection();
+        $this->ratings = new Collection();
     }
 
     public function getAll()
@@ -60,6 +62,16 @@ class RecipeRepository implements RecipeRepositoryInterface
         $this->recipes = $this->recipes->keyBy('id');
         $this->recipes->forget($id);
         return true;
+    }
+
+    public function createRating($data, $id)
+    {
+        $recipe = $this->getById($id);
+        $data['recipe_id'] = $recipe['id'];
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $this->ratings->push($data);
+        return $recipe;
     }
 
 }
