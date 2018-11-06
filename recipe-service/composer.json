@@ -26,10 +26,10 @@
         "illuminate/validation": "^5.7.0",
         "league/fractal": "^0.17.0",
         "robmorgan/phinx": "^0.10.6",
-        "symfony/dotenv": "^4.1",
         "symfony/finder": "^4.1",
         "fzaninotto/faker": "^1.8",
-        "illuminate/pagination": "^5.7"
+        "illuminate/pagination": "^5.7",
+        "vlucas/phpdotenv": "^2.5"
     },
     "require-dev": {
         "codeception/codeception": "^2.5",
