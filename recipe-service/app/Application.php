@@ -2,14 +2,15 @@
 namespace App;
 
 use App\Exceptions\ExceptionHandler;
+use Dotenv\Dotenv;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Container\Container;
+use Illuminate\Database\Capsule\Manager as DbCapsule;
 use Illuminate\Events\Dispatcher as EventsDispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Database\Capsule\Manager as DbCapsule;
 
 class Application
 {
@@ -61,6 +62,7 @@ class Application
 
     private function registerConfig()
     {
+        $this->checkHeadersForEnv();
         $configItems = [];
         $this->finder->files()->in(__DIR__.'/../config/');
         foreach ($this->finder as $file) {
@@ -87,13 +89,30 @@ class Application
 
     private function registerRepositories()
     {
-        $this->container->bind(App\Repositories\Contracts\RecipeRepositoryInterface::class,
-                               App\Repositories\Eloquent\RecipeRepository::class);
+        $this->container->bind(\App\Repositories\Contracts\RecipeRepositoryInterface::class,
+                               \App\Repositories\Eloquent\RecipeRepository::class);
     }
 
     private function registerEvents()
     {
         $this->events->listen([\App\Events\NewRatingCreatedEvent::class],
                                \App\Listeners\UpdateRecipeRating::class);
+    }
+
+    private function checkHeadersForEnv()
+    {
+        if(isset($_SERVER['HTTP_APP_ENV']) && !empty($_SERVER['HTTP_APP_ENV']))
+        {
+            $envFile = __DIR__.'/../.env.'.$_SERVER['HTTP_APP_ENV'];
+            if(file_exists($envFile))
+            {
+                $this->loadEnvironmentFromFile($envFile);
+            }
+        }
+    }
+
+    public function loadEnvironmentFromFile($file)
+    {
+        return (new Dotenv(dirname($file),basename($file)))->overload();
     }
 }
