@@ -5,11 +5,9 @@ use Illuminate\Http\Request;
 
 class NotFoundHttpException extends BaseException
 {
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $method = $request->getMethod();
-        $path = $request->getPathInfo();
-        $message = "Method {$method} is not found in path {$path}";
+        $message = "Resource not found.";
         parent::__construct($message, 404);
     }
 }

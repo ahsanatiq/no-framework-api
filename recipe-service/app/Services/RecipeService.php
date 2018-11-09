@@ -17,8 +17,7 @@ class RecipeService extends BaseService
         RecipeRepositoryInterface $recipeRepository,
         RecipeValidator $recipeValidator,
         RatingValidator $ratingValidator
-    )
-    {
+    ) {
         $this->recipeRepository = $recipeRepository;
         $this->recipeValidator = $recipeValidator;
         $this->ratingValidator = $ratingValidator;
@@ -62,6 +61,7 @@ class RecipeService extends BaseService
 
     public function createRating($data, $recipeId)
     {
+        $this->getById($recipeId);
         $this->ratingValidator->validate($data);
         $rating = $this->recipeRepository->createRating($data, $recipeId);
         dispatcher()->dispatch(new NewRatingCreatedEvent($recipeId, $rating));
@@ -72,5 +72,4 @@ class RecipeService extends BaseService
     {
         return $this->recipeRepository->updateRating($recipeId);
     }
-
 }

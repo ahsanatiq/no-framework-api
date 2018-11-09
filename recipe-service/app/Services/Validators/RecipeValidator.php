@@ -10,5 +10,4 @@ class RecipeValidator extends BaseValidator
         'difficulty'  => ['required', 'numeric', 'between:1,3'],
         'vegetarian'  => ['required', 'boolean'],
     ];
-
 }

@@ -10,7 +10,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     private $recipes;
     private $ratings;
 
-    function __construct()
+    public function __construct()
     {
         $this->recipes = new Collection();
         $this->ratings = new Collection();
@@ -29,8 +29,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     public function getById($id)
     {
         $recipe = $this->recipes->where('id', $id)->first();
-        if(!$recipe)
-        {
+        if (!$recipe) {
             throw new RecipeNotFoundException;
         }
         return $recipe;
@@ -86,8 +85,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     {
         $recipe = $this->getById($id);
         $rating = $this->ratings->where('recipe_id', $id)->average('rating');
-        $recipe = $this->update(['rating' => round($rating,2)], $id);
+        $recipe = $this->update(['rating' => round($rating, 2)], $id);
         return $recipe;
     }
-
 }

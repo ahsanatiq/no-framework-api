@@ -1,5 +1,5 @@
 <?php
-
+namespace database\seeds;
 
 use Phinx\Seed\AbstractSeed;
 

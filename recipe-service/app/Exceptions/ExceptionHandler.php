@@ -7,15 +7,20 @@ use App\Exceptions\RecipeNotFoundException;
 use App\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExceptionHandler
 {
 
-    public static function handle($e, Request $request) {
+    public static function handle($e)
+    {
         switch ($e) {
             case $e instanceof NotFoundHttpException:
-                $data = (new AppNotFoundHttpException($request))->getData();
+                $data = (new AppNotFoundHttpException)->getData();
+                break;
+            case $e instanceof MethodNotAllowedHttpException:
+                $data = (new AppNotFoundHttpException)->getData();
                 break;
             case $e instanceof ValidationException:
                 $data = $e->getData();
@@ -25,17 +30,14 @@ class ExceptionHandler
                 break;
             default:
                 $data = (new UnexpectedException)->getData();
-                if (config()->get('app.env') != 'production') {
-                    $data['type'] = get_class($e);
-                    $data['message'] = $e->getMessage();
-                }
                 break;
         }
         if (config()->get('app.env') != 'production') {
+            $data['exception_type'] = get_class($e);
+            $data['exception_message'] = $e->getMessage();
             $data['trace'] = $e->getTrace();
         }
 
         return (new Response($data, $data['code']))->send();
     }
-
 }

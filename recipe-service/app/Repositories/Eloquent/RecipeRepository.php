@@ -11,19 +11,19 @@ class RecipeRepository implements RecipeRepositoryInterface
 {
     private $recipeModel;
 
-    function __construct(Recipe $recipeModel)
+    public function __construct(Recipe $recipeModel)
     {
         $this->recipeModel = $recipeModel;
     }
 
     public function getAll()
     {
-        return $this->recipeModel->all();
+        return $this->recipeModel->orderBy('id', 'desc')->all();
     }
 
     public function getPaginated($perPage, $pageNum)
     {
-        return $this->recipeModel->paginate(
+        return $this->recipeModel->orderBy('id', 'desc')->paginate(
             $perPage,
             ['*'],
             config()->get('app.page_param'),
@@ -34,8 +34,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     public function getById($recipeId)
     {
         $recipe = $this->recipeModel->find($recipeId);
-        if(!$recipe)
-        {
+        if (!$recipe) {
             throw new RecipeNotFoundException;
         }
         return $recipe;
@@ -49,7 +48,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     public function update($data, $recipeId)
     {
         $recipe = $this->getById($recipeId);
-        if($recipe->update($data)) {
+        if ($recipe->update($data)) {
             return $recipe;
         }
         throw new UnexpectedException;
@@ -58,7 +57,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     public function delete($recipeId)
     {
         $recipe = $this->getById($recipeId);
-        if($recipe->delete()) {
+        if ($recipe->delete()) {
             return true;
         }
         throw new UnexpectedException;
@@ -68,8 +67,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     {
         $recipe = $this->getById($recipeId);
         $rating = $recipe->ratings()->create($data);
-        if($rating)
-        {
+        if ($rating) {
             return rating;
         }
         throw new UnexpectedException;
@@ -78,10 +76,9 @@ class RecipeRepository implements RecipeRepositoryInterface
     public function updateRating($recipeId)
     {
         $recipe = $this->getById($recipeId);
-        $rating = $recipe->ratings()->average('rating')->get();
+        $rating = $recipe->ratings()->average('rating');
         $recipe->rating = $rating;
-        if($recipe->save())
-        {
+        if ($recipe->save()) {
             return $recipe;
         }
         throw new UnexpectedException;

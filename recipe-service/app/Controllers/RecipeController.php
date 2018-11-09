@@ -10,7 +10,7 @@ class RecipeController extends BaseController
     private $recipeService;
     private $recipeTransformer;
 
-    function __construct(RecipeService $recipeService, RecipeTransformer $recipeTransformer)
+    public function __construct(RecipeService $recipeService, RecipeTransformer $recipeTransformer)
     {
         $this->recipeService = $recipeService;
         $this->recipeTransformer = $recipeTransformer;
@@ -58,7 +58,7 @@ class RecipeController extends BaseController
 
     public function delete($recipeId)
     {
-        return $this->recipeService->delete($recipeId);
+        $result = $this->recipeService->delete($recipeId);
+        return ['success'=>$result];
     }
-
 }

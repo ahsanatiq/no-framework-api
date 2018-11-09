@@ -4,39 +4,37 @@ namespace App\Exceptions;
 
 class ValidationException extends BaseException
 {
-    public function __construct( $errors = null, $message = null, $code = 0, Exception $previous = null ) {
-        $this->setErrors( $errors );
-        parent::__construct( $this->errors->first(), 422, $previous );
+    public function __construct($errors = null)
+    {
+        $this->setErrors($errors);
+        parent::__construct($this->errors->first(), 422);
     }
 
-    protected function setErrors( $errors ) {
-        if ( is_string( $errors ) )
-        {
+    protected function setErrors($errors)
+    {
+        if (is_string($errors)) {
             $errors = [
                 'error' => $errors,
             ];
         }
-        if ( is_array( $errors ) )
-        {
-            $this->errors = new MessageBag( $errors );
-        }
-        else
-        {
+        if (is_array($errors)) {
+            $this->errors = new MessageBag($errors);
+        } else {
             $this->errors = $errors;
         }
     }
 
-    public function getErrors() {
+    public function getErrors()
+    {
         $errors = $this->errors;
-        if($errors->any()) {
+        if ($errors->any()) {
             return $errors->all();
         }
         return [];
     }
 
-    public function get_message()
+    public function getExceptionMessage()
     {
         return  $this->getErrors();
     }
-
 }

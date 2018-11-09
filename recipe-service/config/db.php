@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'default'       => getenv('DB_CONNECTION'),
-    'pgsql'         => [
+    'default' => getenv('DB_CONNECTION'),
+    'pgsql' => [
         'driver'    => 'pgsql',
         'host'      => getenv('DB_HOST'),
         'database'  => getenv('DB_NAME'),

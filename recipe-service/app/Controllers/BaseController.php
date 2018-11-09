@@ -14,9 +14,10 @@ abstract class BaseController
     public function toFractalResponse($data, $transformer, LengthAwarePaginator $paginator = null)
     {
         $fractal = new Manager();
-        if($data instanceof EloquentCollection) {
+        if ($data instanceof EloquentCollection) {
             $resource = new Collection($data, $transformer);
-            if($paginator) {
+            if ($paginator && $data->count()) {
+                $paginator->withPath($this->stripPageAndPortFromUrl(currentUrl())->getUrl());
                 $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
             }
         } else {
@@ -42,5 +43,16 @@ abstract class BaseController
         return !empty($request->has($per_page_param))
         ? (int) $request->input($per_page_param)
         : (int) config()->get('app.items_per_page');
+    }
+
+    public function stripPageAndPortFromUrl($url)
+    {
+        if (!empty($url->get('port')) && $url->get('port') == '80') {
+            $url->set('port', '');
+        }
+        if (!empty($url->query->get('page'))) {
+            $url->query->remove('page');
+        }
+        return $url;
     }
 }
