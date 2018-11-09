@@ -2,7 +2,6 @@
 namespace App;
 
 use App\Exceptions\ExceptionHandler;
-use Dotenv\Dotenv;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as DbCapsule;
@@ -31,8 +30,7 @@ class Application
         Request $request,
         Response $response,
         Router $router
-    )
-    {
+    ) {
         $this->container = Container::getInstance();
         $this->config    = $config;
         $this->db        = $db;
@@ -89,30 +87,27 @@ class Application
 
     private function registerRepositories()
     {
-        $this->container->bind(\App\Repositories\Contracts\RecipeRepositoryInterface::class,
-                               \App\Repositories\Eloquent\RecipeRepository::class);
+        $this->container->bind(
+            \App\Repositories\Contracts\RecipeRepositoryInterface::class,
+            \App\Repositories\Eloquent\RecipeRepository::class
+        );
     }
 
     private function registerEvents()
     {
-        $this->events->listen([\App\Events\NewRatingCreatedEvent::class],
-                               \App\Listeners\UpdateRecipeRating::class);
+        $this->events->listen(
+            [\App\Events\NewRatingCreatedEvent::class],
+            \App\Listeners\UpdateRecipeRating::class
+        );
     }
 
     private function checkHeadersForEnv()
     {
-        if(isset($_SERVER['HTTP_APP_ENV']) && !empty($_SERVER['HTTP_APP_ENV']))
-        {
+        if (isset($_SERVER['HTTP_APP_ENV']) && !empty($_SERVER['HTTP_APP_ENV'])) {
             $envFile = __DIR__.'/../.env.'.$_SERVER['HTTP_APP_ENV'];
-            if(file_exists($envFile))
-            {
-                $this->loadEnvironmentFromFile($envFile);
+            if (file_exists($envFile)) {
+                loadEnvironmentFromFile($envFile);
             }
         }
-    }
-
-    public function loadEnvironmentFromFile($file)
-    {
-        return (new Dotenv(dirname($file),basename($file)))->overload();
     }
 }
