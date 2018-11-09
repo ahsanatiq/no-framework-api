@@ -1,4 +1,5 @@
 <?php
+$envTesting = require '.env.testing.php';
 
 return [
     'paths' => [
@@ -17,8 +18,12 @@ return [
             'port'    => getenv('DB_PORT'),
         ],
         'testing' => [
-            'adapter' => 'sqlite',
-            'name'    => getenv('DB_NAME'),
+            'adapter' => $envTesting['DB_CONNECTION'],
+            'host'    => $envTesting['DB_HOST'],
+            'name'    => $envTesting['DB_NAME'],
+            'user'    => $envTesting['DB_USER'],
+            'pass'    => $envTesting['DB_PASSWORD'],
+            'port'    => $envTesting['DB_PORT'],
         ]
     ]
 ];

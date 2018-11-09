@@ -8,8 +8,18 @@ actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: http://recipe-service/
+            url: '%APP_URL%'
+            headers:
+                APP_ENV: testing
         - \Helper\Acceptance
+        - Asserts
         - REST:
             depends: PhpBrowser
-            url: 'http://recipe-service/'
+            url: '%APP_URL%/api/v1'
+        - Db:
+            dsn: '%DB_CONNECTION%:host=%DB_HOST%;dbname=%DB_NAME%'
+            user: '%DB_USER%'
+            password: '%DB_PASSWORD%'
+            dump: 'tests/_data/hellofresh.psql'
+            cleanup: true # run populator before each test
+            populate: true # run populator before all test

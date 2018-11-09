@@ -7,6 +7,14 @@ paths:
 actor_suffix: Tester
 settings:
     bootstrap: _bootstrap.php
+coverage:
+    enabled: true
+    include:
+        - app/*
+    exclude:
+        - vendor/*
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+params:
+    - .env.testing.php
