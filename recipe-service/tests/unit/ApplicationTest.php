@@ -1,4 +1,5 @@
 <?php
+namespace Tests;
 
 class ApplicationTest extends \Codeception\Test\Unit
 {
@@ -9,14 +10,15 @@ class ApplicationTest extends \Codeception\Test\Unit
     protected $app;
 
     // include the bootstrap file that is needed for initializing application
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         // require codecept_root_dir('bootstrap/app.php');
     }
 
     public function _before()
     {
-       $this->container = Illuminate\Container\Container::getInstance();
-       $this->app = $this->container->make('app');
+        $this->container = \Illuminate\Container\Container::getInstance();
+        $this->app = $this->container->make('app');
     }
 
     // tests
@@ -32,12 +34,12 @@ class ApplicationTest extends \Codeception\Test\Unit
     public function testContainerInstanceInsideApplication()
     {
         $this->assertInstanceOf(
-            Illuminate\Container\Container::class,
+            \Illuminate\Container\Container::class,
             $this->app->container
         );
 
         $this->assertEquals(
-            Illuminate\Container\Container::getInstance(),
+            \Illuminate\Container\Container::getInstance(),
             $this->app->container
         );
     }
@@ -46,7 +48,7 @@ class ApplicationTest extends \Codeception\Test\Unit
     {
         $router = $this->app->router;
         $this->assertInstanceOf(
-            Illuminate\Routing\Router::class,
+            \Illuminate\Routing\Router::class,
             $router
         );
     }
@@ -57,7 +59,7 @@ class ApplicationTest extends \Codeception\Test\Unit
     {
         $request = $this->app->request;
         $this->assertInstanceOf(
-            Illuminate\Http\Request::class,
+            \Illuminate\Http\Request::class,
             $request
         );
     }
@@ -66,7 +68,7 @@ class ApplicationTest extends \Codeception\Test\Unit
     {
         $events = $this->app->events;
         $this->assertInstanceOf(
-            Illuminate\Events\Dispatcher::class,
+            \Illuminate\Events\Dispatcher::class,
             $events
         );
     }
@@ -75,7 +77,7 @@ class ApplicationTest extends \Codeception\Test\Unit
     {
         $config = $this->app->config;
         $this->assertInstanceOf(
-            Illuminate\Config\Repository::class,
+            \Illuminate\Config\Repository::class,
             $config
         );
     }
@@ -84,7 +86,7 @@ class ApplicationTest extends \Codeception\Test\Unit
     {
         $finder = $this->app->finder;
         $this->assertInstanceOf(
-            Symfony\Component\Finder\Finder::class,
+            \Symfony\Component\Finder\Finder::class,
             $finder
         );
     }
@@ -93,7 +95,7 @@ class ApplicationTest extends \Codeception\Test\Unit
     {
         $db = $this->app->db;
         $this->assertInstanceOf(
-            Illuminate\Database\Capsule\Manager::class,
+            \Illuminate\Database\Capsule\Manager::class,
             $db
         );
     }
@@ -131,5 +133,4 @@ class ApplicationTest extends \Codeception\Test\Unit
             $app2
         );
     }
-
 }

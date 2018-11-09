@@ -1,9 +1,11 @@
 <?php
+namespace Tests;
 
 use App\Exceptions\RecipeNotFoundException;
 use App\Exceptions\ValidationException;
 use App\Services\RecipeService;
 use App\Services\Validators\RecipeValidator;
+use Faker\Factory;
 
 class RecipeServiceTest extends \Codeception\Test\Unit
 {
@@ -16,13 +18,13 @@ class RecipeServiceTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        $this->faker = Faker\Factory::create();
+        $this->faker = Factory::create();
         container()->bind(
-            'App\Repositories\Contracts\RecipeRepositoryInterface',
-            'App\Repositories\Collection\RecipeRepository',
+            \App\Repositories\Contracts\RecipeRepositoryInterface::class,
+            \App\Repositories\Collection\RecipeRepository::class,
             true
         );
-        container()->bind('recipeService', 'App\Services\RecipeService');
+        container()->bind('recipeService', \App\Services\RecipeService::class);
         $this->recipeService = container()->make('recipeService');
     }
 
@@ -30,7 +32,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
     public function testCanInitialize()
     {
         $this->assertInstanceOf(
-            App\Services\RecipeService::class,
+            \App\Services\RecipeService::class,
             $this->recipeService
         );
     }
@@ -127,7 +129,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectExceptionMessage('The prep time must be between 1 and 9999.');
         $this->expectExceptionCode(422);
         $data = $this->generateRecipeData();
-        $data['prep_time'] = $this->faker->numberBetween(9999,1000000);
+        $data['prep_time'] = $this->faker->numberBetween(9999, 1000000);
         $recipeId = $this->recipeService->create($data);
     }
 
@@ -137,7 +139,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectExceptionMessage('The difficulty must be between 1 and 3.');
         $this->expectExceptionCode(422);
         $data = $this->generateRecipeData();
-        $data['difficulty'] = $this->faker->numberBetween(3,1000000);
+        $data['difficulty'] = $this->faker->numberBetween(3, 1000000);
         $recipeId = $this->recipeService->create($data);
     }
 
@@ -166,10 +168,10 @@ class RecipeServiceTest extends \Codeception\Test\Unit
 
     public function testGettingRecipeByIdThatDoesNotExists()
     {
-        $this->expectException(App\Exceptions\RecipeNotFoundException::class);
+        $this->expectException(RecipeNotFoundException::class);
         $this->expectExceptionMessage('Recipe not found.');
         $this->expectExceptionCode(404);
-        $this->recipeService->getById($this->faker->numberBetween(1,1000));
+        $this->recipeService->getById($this->faker->numberBetween(1, 1000));
     }
 
     public function testGettingRecipeWithPagination()
@@ -179,19 +181,19 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $data3 = $this->createRecipe();
         $data4 = $this->createRecipe();
         $data5 = $this->createRecipe();
-        $recipes = $this->recipeService->getPaginated('2','1');
+        $recipes = $this->recipeService->getPaginated('2', '1');
         $this->assertCount(2, $recipes);
         $recipe1 = array_shift($recipes);
         $recipe2 = array_shift($recipes);
         $this->assertEquals($data5['result'], $recipe1);
         $this->assertEquals($data4['result'], $recipe2);
-        $recipes = $this->recipeService->getPaginated('2','2');
+        $recipes = $this->recipeService->getPaginated('2', '2');
         $this->assertCount(2, $recipes);
         $recipe1 = array_shift($recipes);
         $recipe2 = array_shift($recipes);
         $this->assertEquals($data3['result'], $recipe1);
         $this->assertEquals($data2['result'], $recipe2);
-        $recipes = $this->recipeService->getPaginated('2','3');
+        $recipes = $this->recipeService->getPaginated('2', '3');
         $this->assertCount(1, $recipes);
         $recipe1 = array_shift($recipes);
         $this->assertEquals($data1['result'], $recipe1);
@@ -201,7 +203,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
     {
         $recipe = $this->createRecipe();
         $data = $this->generateRecipeData();
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
         $this->assertArraySubset($data, $updatedRecipe);
         $recipeRow = $this->recipeService->getById($recipe['result']['id']);
         $this->assertEquals($updatedRecipe, $recipeRow);
@@ -213,11 +215,11 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $generatedData = $this->generateRecipeData();
         $data['name'] = $generatedData['name'];
         $originalRecipe = $this->recipeService->getById($recipe['result']['id']);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
         $updatedrecipeNew = $this->recipeService->getById($recipe['result']['id']);
         $this->assertEquals($data['name'], $updatedRecipe['name']);
         $this->assertEquals($updatedRecipe, $updatedrecipeNew);
-        $this->assertEquals(array_merge($originalRecipe,$data), $updatedrecipeNew);
+        $this->assertEquals(array_merge($originalRecipe, $data), $updatedrecipeNew);
     }
 
     public function testPartialUpdateRecipeWithDescription()
@@ -226,11 +228,11 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $generatedData = $this->generateRecipeData();
         $data['description'] = $generatedData['description'];
         $originalRecipe = $this->recipeService->getById($recipe['result']['id']);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
         $updatedrecipeNew = $this->recipeService->getById($recipe['result']['id']);
         $this->assertEquals($data['description'], $updatedRecipe['description']);
         $this->assertEquals($updatedRecipe, $updatedrecipeNew);
-        $this->assertEquals(array_merge($originalRecipe,$data), $updatedrecipeNew);
+        $this->assertEquals(array_merge($originalRecipe, $data), $updatedrecipeNew);
     }
 
     public function testPartialUpdateRecipeWithPrepTime()
@@ -239,11 +241,11 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $generatedData = $this->generateRecipeData();
         $data['prep_time'] = $generatedData['prep_time'];
         $originalRecipe = $this->recipeService->getById($recipe['result']['id']);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
         $updatedrecipeNew = $this->recipeService->getById($recipe['result']['id']);
         $this->assertEquals($data['prep_time'], $updatedRecipe['prep_time']);
         $this->assertEquals($updatedRecipe, $updatedrecipeNew);
-        $this->assertEquals(array_merge($originalRecipe,$data), $updatedrecipeNew);
+        $this->assertEquals(array_merge($originalRecipe, $data), $updatedrecipeNew);
     }
 
     public function testPartialUpdateRecipeWithDifficulty()
@@ -252,11 +254,11 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $generatedData = $this->generateRecipeData();
         $data['difficulty'] = $generatedData['difficulty'];
         $originalRecipe = $this->recipeService->getById($recipe['result']['id']);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
         $updatedrecipeNew = $this->recipeService->getById($recipe['result']['id']);
         $this->assertEquals($data['difficulty'], $updatedRecipe['difficulty']);
         $this->assertEquals($updatedRecipe, $updatedrecipeNew);
-        $this->assertEquals(array_merge($originalRecipe,$data), $updatedrecipeNew);
+        $this->assertEquals(array_merge($originalRecipe, $data), $updatedrecipeNew);
     }
 
     public function testPartialUpdateRecipeWithVegetarian()
@@ -265,11 +267,11 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $generatedData = $this->generateRecipeData();
         $data['vegetarian'] = $generatedData['vegetarian'];
         $originalRecipe = $this->recipeService->getById($recipe['result']['id']);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
         $updatedrecipeNew = $this->recipeService->getById($recipe['result']['id']);
         $this->assertEquals($data['vegetarian'], $updatedRecipe['vegetarian']);
         $this->assertEquals($updatedRecipe, $updatedrecipeNew);
-        $this->assertEquals(array_merge($originalRecipe,$data), $updatedrecipeNew);
+        $this->assertEquals(array_merge($originalRecipe, $data), $updatedrecipeNew);
     }
 
     public function testValidationNameMaxLengthWhenUpdateRecipe()
@@ -280,7 +282,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The name may not be greater than 100 characters.');
         $this->expectExceptionCode(422);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
     }
 
     public function testValidationPrepTimeNumericWhenUpdateRecipe()
@@ -291,18 +293,18 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The prep time must be a number.');
         $this->expectExceptionCode(422);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
     }
 
     public function testValidationPrepTimeRangeWhenUpdateRecipe()
     {
         $recipe = $this->createRecipe();
         $generatedData = $this->generateRecipeData();
-        $data['prep_time'] = $this->faker->numberBetween(999999,10000000000);
+        $data['prep_time'] = $this->faker->numberBetween(999999, 10000000000);
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The prep time must be between 1 and 9999.');
         $this->expectExceptionCode(422);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
     }
 
     public function testValidationDifficultyNumericWhenUpdateRecipe()
@@ -313,18 +315,18 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The difficulty must be a number.');
         $this->expectExceptionCode(422);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
     }
 
     public function testValidationDifficultyRangeWhenUpdateRecipe()
     {
         $recipe = $this->createRecipe();
         $generatedData = $this->generateRecipeData();
-        $data['difficulty'] = $this->faker->numberBetween(3,10000);
+        $data['difficulty'] = $this->faker->numberBetween(3, 10000);
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The difficulty must be between 1 and 3.');
         $this->expectExceptionCode(422);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
     }
 
     public function testValidationVegetarianBooleanWhenUpdateRecipe()
@@ -335,7 +337,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The vegetarian field must be true or false.');
         $this->expectExceptionCode(422);
-        $updatedRecipe = $this->recipeService->update($data,$recipe['result']['id']);
+        $updatedRecipe = $this->recipeService->update($data, $recipe['result']['id']);
     }
 
     public function testDeleteRecipeWithIdThatDoesNotExists()
@@ -343,7 +345,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectException(RecipeNotFoundException::class);
         $this->expectExceptionMessage('Recipe not found.');
         $this->expectExceptionCode(404);
-        $this->recipeService->delete($this->faker->numberBetween(10,1000));
+        $this->recipeService->delete($this->faker->numberBetween(10, 1000));
     }
 
     public function testDeleteRecipe()
@@ -363,7 +365,7 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectExceptionMessage('Recipe not found.');
         $this->expectExceptionCode(404);
         $ratingData = $this->generateRatingData();
-        $ratedRecipe = $this->recipeService->createRating($ratingData, $this->faker->numberBetween(10,10000));
+        $ratedRecipe = $this->recipeService->createRating($ratingData, $this->faker->numberBetween(10, 10000));
     }
 
     public function testValidationWithRatingRequiredWhenCreatingRating()
@@ -406,19 +408,17 @@ class RecipeServiceTest extends \Codeception\Test\Unit
         $this->expectExceptionMessage('The rating must be between 1 and 5.');
         $this->expectExceptionCode(422);
         $ratingData = $this->generateRatingData();
-        $ratingData['rating'] = $this->faker->numberBetween(6,1000);
+        $ratingData['rating'] = $this->faker->numberBetween(6, 1000);
         $ratedRecipe = $this->recipeService->createRating($ratingData, $recipe['result']['id']);
     }
 
     public function testRatingRecipeWithSuccess()
     {
-        for($i=1; $i<=3; $i++)
-        {
+        for ($i=1; $i<=3; $i++) {
             $recipe = $this->createRecipe();
-            $this->assertEquals($recipe['result']['rating'],0);
+            $this->assertEquals($recipe['result']['rating'], 0);
             $ratingSum=0;
-            for($j=1; $j<=10; $j++)
-            {
+            for ($j=1; $j<=10; $j++) {
                 $rating = $this->createRating($recipe['result']['id']);
                 $ratingSum+=$rating['original']['rating'];
                 $ratingAverage = round($ratingSum/$j, 2);
@@ -463,5 +463,4 @@ class RecipeServiceTest extends \Codeception\Test\Unit
             'rating'  => $this->faker->numberBetween(1, 5)
         ];
     }
-
 }

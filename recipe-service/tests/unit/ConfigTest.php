@@ -1,15 +1,12 @@
 <?php
+namespace Tests;
+
 class ConfigTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
      */
     protected $tester;
-
-    protected function _before()
-    {
-        // app()->run();
-    }
 
     // tests
     public function testAppConfiguration()

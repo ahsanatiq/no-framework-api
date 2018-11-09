@@ -1,4 +1,6 @@
 <?php
+namespace Tests;
+
 class HelperFunctionsTest extends \Codeception\Test\Unit
 {
     /**
@@ -18,7 +20,7 @@ class HelperFunctionsTest extends \Codeception\Test\Unit
     public function testContainer()
     {
         $this->assertInstanceOf(
-            Illuminate\Container\Container::class,
+            \Illuminate\Container\Container::class,
             container()
         );
     }
@@ -26,8 +28,16 @@ class HelperFunctionsTest extends \Codeception\Test\Unit
     public function testConfiguration()
     {
         $this->assertInstanceOf(
-            Illuminate\Config\Repository::class,
+            \Illuminate\Config\Repository::class,
             config()
+        );
+    }
+
+    public function testDispatcher()
+    {
+        $this->assertInstanceOf(
+            \Illuminate\Events\Dispatcher::class,
+            dispatcher()
         );
     }
 }

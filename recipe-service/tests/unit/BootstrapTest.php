@@ -1,4 +1,6 @@
 <?php
+namespace Tests;
+
 class BootstrapTest extends \Codeception\Test\Unit
 {
     /**
@@ -8,14 +10,14 @@ class BootstrapTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        $this->container = Illuminate\Container\Container::getInstance();
+        $this->container = \Illuminate\Container\Container::getInstance();
     }
 
     // tests
     public function testContainerInstance()
     {
         $this->assertInstanceOf(
-            Illuminate\Container\Container::class,
+            \Illuminate\Container\Container::class,
             $this->container
         );
     }
@@ -24,12 +26,12 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $router = $this->container->make('Illuminate\Routing\Router');
         $this->assertInstanceOf(
-            Illuminate\Routing\Router::class,
+            \Illuminate\Routing\Router::class,
             $router
         );
         $router = $this->container->make('router');
         $this->assertInstanceOf(
-            Illuminate\Routing\Router::class,
+            \Illuminate\Routing\Router::class,
             $router
         );
     }
@@ -38,12 +40,12 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $request = $this->container->make('Illuminate\Http\Request');
         $this->assertInstanceOf(
-            Illuminate\Http\Request::class,
+            \Illuminate\Http\Request::class,
             $request
         );
         $request = $this->container->make('request');
         $this->assertInstanceOf(
-            Illuminate\Http\Request::class,
+            \Illuminate\Http\Request::class,
             $request
         );
     }
@@ -52,12 +54,12 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $events = $this->container->make('Illuminate\Events\Dispatcher');
         $this->assertInstanceOf(
-            Illuminate\Events\Dispatcher::class,
+            \Illuminate\Events\Dispatcher::class,
             $events
         );
         $events = $this->container->make('dispatcher');
         $this->assertInstanceOf(
-            Illuminate\Events\Dispatcher::class,
+            \Illuminate\Events\Dispatcher::class,
             $events
         );
     }
@@ -66,12 +68,12 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $config = $this->container->make('Illuminate\Config\Repository');
         $this->assertInstanceOf(
-            Illuminate\Config\Repository::class,
+            \Illuminate\Config\Repository::class,
             $config
         );
         $config = $this->container->make('config');
         $this->assertInstanceOf(
-            Illuminate\Config\Repository::class,
+            \Illuminate\Config\Repository::class,
             $config
         );
     }
@@ -80,12 +82,12 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $finder = $this->container->make('Symfony\Component\Finder\Finder');
         $this->assertInstanceOf(
-            Symfony\Component\Finder\Finder::class,
+            \Symfony\Component\Finder\Finder::class,
             $finder
         );
         $finder = $this->container->make('finder');
         $this->assertInstanceOf(
-            Symfony\Component\Finder\Finder::class,
+            \Symfony\Component\Finder\Finder::class,
             $finder
         );
     }
@@ -94,12 +96,12 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $db = $this->container->make('Illuminate\Database\Capsule\Manager');
         $this->assertInstanceOf(
-            Illuminate\Database\Capsule\Manager::class,
+            \Illuminate\Database\Capsule\Manager::class,
             $db
         );
         $db = $this->container->make('database');
         $this->assertInstanceOf(
-            Illuminate\Database\Capsule\Manager::class,
+            \Illuminate\Database\Capsule\Manager::class,
             $db
         );
     }
@@ -108,11 +110,8 @@ class BootstrapTest extends \Codeception\Test\Unit
     {
         $app = $this->container->make('app');
         $this->assertInstanceOf(
-            App\Application::class,
+            \App\Application::class,
             $app
         );
     }
-
-
-
 }
