@@ -26,25 +26,23 @@ abstract class BaseValidator
             $rules = $this->rules;
         }
 
-        if($this->mode == 'update')
-        {
-            $rules = array_map(function($rule) {
-                $rule = array_filter($rule, function($rule_values) {
-                    if(strtolower($rule_values)!='required') {
-                        return true;
-                    }
-                });
-                return $rule;
-            }, $rules);
+        $addRuleWhenRequiredFound = function ($rulesList) {
+            if (in_array('required', $rulesList)) {
+                array_unshift($rulesList, 'sometimes');
+            }
+            return $rulesList;
+        };
+
+        if ($this->mode == 'update') {
+            $rules = array_map($addRuleWhenRequiredFound, $rules);
         }
 
         $validation = $this->validator->make($data, $rules, $custom_errors);
 
-        if ( $validation->fails() ) {
-            throw new ValidationException( $validation->messages() );
+        if ($validation->fails()) {
+            throw new ValidationException($validation->messages());
         }
 
         return true;
     }
-
 }
