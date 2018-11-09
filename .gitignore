@@ -8,9 +8,9 @@ vendor
 # environment file
 .env
 # Codeception
-tests/_data
-tests/_output
+recipe-service/tests/_data
+recipe-service/tests/_output
 # Mac
 .DS_Store
 # Docker Volumes
-data/postgres/*
+data/
