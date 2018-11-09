@@ -8,9 +8,6 @@
     		"App\\": "app/",
     		"Tests\\": "tests/"
     	},
-    	"classmap": [
-    		"database/"
-    	],
     	"files": [
     		"app/helpers.php"
     	]
@@ -24,12 +21,12 @@
         "illuminate/events": "^5.7.0",
         "illuminate/log": "^5.7.0",
         "illuminate/validation": "^5.7.0",
+        "illuminate/pagination": "^5.7",
         "league/fractal": "^0.17.0",
         "robmorgan/phinx": "^0.10.6",
         "symfony/dotenv": "^4.1",
         "symfony/finder": "^4.1",
         "fzaninotto/faker": "^1.8",
-        "illuminate/pagination": "^5.7",
         "vlucas/phpdotenv": "^2.5",
         "jwage/purl": "^0.0.10"
     },
