@@ -14,6 +14,10 @@ use Illuminate\Validation\Factory as ValidationFactory;
 use Symfony\Component\Finder\Finder;
 use Dotenv\Dotenv;
 
+
+// Codeception code-coverage sciprt
+include __DIR__.'/../c3.php';
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $container = Container::getInstance();
