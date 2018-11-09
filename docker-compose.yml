@@ -11,7 +11,6 @@ services:
             - "443:443"
         depends_on:
             - postgres
-            - redis
         env_file:
             - ./recipe-service/.env
 # Postgres container
@@ -27,10 +26,29 @@ services:
             POSTGRES_USER: hellofresh
             POSTGRES_PASSWORD: hellofresh
             POSTGRES_DB: hellofresh
-# Redis container
-    redis:
-        image: sickp/alpine-redis:3.2.2
+# OAuth Service container
+    oauth-service:
+        build: ./oauth-service
+        restart: unless-stopped
+        volumes:
+            - ./oauth-service:/server/http
+        ports:
+            - "8001:80"
+            - "4431:443"
+        depends_on:
+            - postgres-oauth
+        env_file:
+            - ./oauth-service/.env
+# Postgres for OAuth container
+    postgres-oauth:
+        image: onjin/alpine-postgres:9.5
         restart: unless-stopped
         ports:
-            - "6379:6379"
-
+            - "54321:5432"
+        volumes:
+            - ./data/postgres-auth:/var/lib/postgresql/data
+        environment:
+            LC_ALL: C.UTF-8
+            POSTGRES_USER: hellofresh
+            POSTGRES_PASSWORD: hellofresh
+            POSTGRES_DB: hellofresh
