@@ -22,9 +22,30 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('request')) {
+    function request()
+    {
+        return container()->make('request');
+    }
+}
+
 if (!function_exists('dispatcher')) {
     function dispatcher()
     {
         return container()->make('dispatcher');
+    }
+}
+
+if (!function_exists('currentUrl')) {
+    function currentUrl()
+    {
+        return \Purl\Url::fromCurrent();
+    }
+}
+
+if (!function_exists('loadEnvironmentFromFile')) {
+    function loadEnvironmentFromFile($file)
+    {
+        return (new Dotenv\Dotenv(dirname($file), basename($file)))->overload();
     }
 }
