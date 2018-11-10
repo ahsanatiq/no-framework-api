@@ -10,7 +10,7 @@ class OauthScopes extends AbstractMigration
         $table = $this->table('oauth_scopes');
         $table
         ->addColumn('scope', 'string', ['null'=>false, 'limit' => 80])
-        ->addColumn('is_default', 'boolean')
+        ->addColumn('is_default', 'boolean', ['null'=>true])
         ->create();
     }
 }

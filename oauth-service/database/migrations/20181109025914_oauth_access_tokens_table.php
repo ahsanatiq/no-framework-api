@@ -9,11 +9,11 @@ class OauthAccessTokensTable extends AbstractMigration
     {
         $table = $this->table('oauth_access_tokens');
         $table
-        ->addColumn('access_token', 'string', ['null'=>false, 'limit' => 40])
+        ->addColumn('access_token', 'string', ['null'=>false, 'limit' => 2000])
         ->addColumn('client_id', 'string', ['null'=>false, 'limit' => 80])
-        ->addColumn('user_id', 'string', ['limit' => 80])
-        ->addColumn('expires', 'timestamp', ['null'=>false])
-        ->addColumn('scope', 'string', ['limit' => 4000])
+        ->addColumn('user_id', 'string', ['null'=>true, 'limit' => 80])
+        ->addColumn('expires', 'timestamp', ['null'=>true, 'null'=>false])
+        ->addColumn('scope', 'string', ['null'=>true, 'limit' => 4000])
         ->create();
     }
 }
