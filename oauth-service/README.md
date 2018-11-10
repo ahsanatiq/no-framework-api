@@ -6,7 +6,7 @@ A simple OAuth2 Server API service where users can authenticate and authorize th
 
 All the key-design points of the application are already described in the `recipe-service`. It follows all the same principles and packages except the following:
 
-##### Authentication & Authorization:
+##### Authentication via OAuth2:
 
-For the authentication & authorization of our users, I've used the library [oauth2-server-php](https://github.com/bshaffer/oauth2-server-php), It's an implementation of OAuth 2.0 Server. I've implemented to support the `Client Credentails` and `Password` Grants for the authentication purpose, so users can access the protected routes on the "recipe-service"
+To access the protected data enpoints at recipes-service, it requires an OAuth2 Bearer `token`. which can be generated using this library [oauth2-server-php](https://github.com/bshaffer/oauth2-server-php), It's an implementation of OAuth 2.0 Server. I've implemented to support the `Client Credentails` and `Password` Grants for the authentication of users who want to access the protected routes.
 

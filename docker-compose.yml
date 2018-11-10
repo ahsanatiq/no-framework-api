@@ -32,6 +32,7 @@ services:
         restart: unless-stopped
         volumes:
             - ./oauth-service:/server/http
+            - ./data/keys:/server/keys
         ports:
             - "8001:80"
             - "4431:443"

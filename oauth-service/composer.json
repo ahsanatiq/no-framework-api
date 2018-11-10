@@ -22,7 +22,8 @@
         "symfony/dotenv": "^4.1",
         "symfony/finder": "^4.1",
         "vlucas/phpdotenv": "^2.5",
-        "bshaffer/oauth2-server-php": "^1.10.0"
+        "bshaffer/oauth2-server-php": "^1.10.0",
+        "illuminate/events": "^5.7"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3"
