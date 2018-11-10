@@ -13,8 +13,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $container = Container::getInstance();
 
-$config = new ConfigRepository;
-$container->instance('Illuminate\Config\Repository', $config);
+$container->singleton('Illuminate\Config\Repository', 'Illuminate\Config\Repository');
 $container->alias('Illuminate\Config\Repository', 'config');
 
 $dispatcher = new Dispatcher($container);
@@ -25,8 +24,7 @@ $router = new Router($dispatcher, $container);
 $container->instance('Illuminate\Routing\Router', $router);
 $container->alias('Illuminate\Routing\Router', 'router');
 
-$finder = new Finder();
-$container->instance('Symfony\Component\Finder\Finder', $finder);
+$container->singleton('Symfony\Component\Finder\Finder', 'Symfony\Component\Finder\Finder');
 $container->alias('Symfony\Component\Finder\Finder', 'finder');
 
 $request = Request::capture();
