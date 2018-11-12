@@ -28,7 +28,9 @@
         "symfony/finder": "^4.1",
         "fzaninotto/faker": "^1.8",
         "vlucas/phpdotenv": "^2.5",
-        "jwage/purl": "^0.0.10"
+        "jwage/purl": "^0.0.10",
+        "lcobucci/jwt": "^3.2",
+        "monolog/monolog": "^1.24"
     },
     "require-dev": {
         "codeception/codeception": "^2.5",
