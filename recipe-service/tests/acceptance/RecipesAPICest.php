@@ -9,15 +9,23 @@ use AcceptanceTester;
 class RecipesAPICest
 {
     protected $faker;
+    protected $restModule;
+
     public function _before(AcceptanceTester $I)
     {
         $this->faker = FakerFactory::create();
         $I->haveHttpHeader('APP_ENV', 'testing');
     }
 
+    public function _inject(\Codeception\Module\REST $restModule)
+    {
+        $this->restModule = $restModule;
+    }
+
     // tests
     public function getStatusCode404WhenWrongRoute(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $resourceNotFoundJson = [
             'type'    => 'NotFoundHttpException',
             'message' => 'Resource not found.',
@@ -83,6 +91,7 @@ class RecipesAPICest
 
     public function createRecipeWithValidationsErrors(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $recipeData  = $this->generateRecipeData();
         $validations = $this->getValidations();
         foreach ($validations as $validation) {
@@ -92,7 +101,7 @@ class RecipesAPICest
             $I->seeResponseContainsJson([
                 'type'    => 'ValidationException',
                 'message' => [$validation['message']],
-                'code'    => 422,
+                'code'    => HttpCode::UNPROCESSABLE_ENTITY,
             ]);
             $this->getListWhenEmpty($I);
         }
@@ -100,6 +109,7 @@ class RecipesAPICest
 
     public function createAndGetRecipesWithoutPagination(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $itemsPerPage = config()->get('app.items_per_page');
         $recipes      = $this->createRecipes($I, $itemsPerPage);
         $numOfRecipes = count($recipes);
@@ -117,9 +127,10 @@ class RecipesAPICest
         }
     }
 
-    public function createAndGetRecipesWithPagination(AcceptanceTester $I, \Codeception\Module\REST $restModule)
+    public function createAndGetRecipesWithPagination(AcceptanceTester $I)
     {
-        $apiUrl              = $restModule->_getConfig('url');
+        $this->getAuthenticated($I);
+        $apiUrl              = $this->restModule->_getConfig('url');
         $numOfRecipes        = '10';
         $itemsPerPage        = config()->get('app.items_per_page');
         $numOfPages          = floor(($numOfRecipes + $itemsPerPage - 1) / $itemsPerPage);
@@ -169,16 +180,19 @@ class RecipesAPICest
 
     public function updateWithPutAndGetRecipe(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $this->updateAndGetRecipe($I, 'PUT');
     }
 
     public function updateWithPatchAndGetRecipe(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $this->updateAndGetRecipe($I, 'PATCH');
     }
 
     public function updateRecipeWithValidationsErrors(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $recipe      = $this->createRecipe($I);
         $validations = $this->getValidations();
         foreach ($validations as $validation) {
@@ -190,7 +204,7 @@ class RecipesAPICest
             $I->seeResponseContainsJson([
                 'type'    => 'ValidationException',
                 'message' => [$validation['message']],
-                'code'    => 422,
+                'code'    => HttpCode::UNPROCESSABLE_ENTITY,
             ]);
             $this->getRecipeById($I, $recipe);
         }
@@ -198,6 +212,7 @@ class RecipesAPICest
 
     public function deleteRecipe(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $recipe = $this->createRecipe($I);
         $I->sendDELETE('/recipes/' . $recipe['id']);
         $I->seeResponseCodeIs(HttpCode::OK);
@@ -209,6 +224,7 @@ class RecipesAPICest
 
     public function testRatingWhenCreatingAndUpdatingRecipe(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $recipeData = $this->generateRecipeData();
         $recipeData['rating'] = '5';
         $recipe = $this->createRecipe($I, $recipeData);
@@ -222,6 +238,7 @@ class RecipesAPICest
 
     public function ratingRecipesWithValidationErrors(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $recipe = $this->createRecipe($I);
         $validations = [
             ['try'=>'', 'message'=>'The rating field is required.'],
@@ -236,13 +253,14 @@ class RecipesAPICest
             $I->seeResponseContainsJson([
                 'type'    => 'ValidationException',
                 'message' => [$validation['message']],
-                'code'    => 422,
+                'code'    => HttpCode::UNPROCESSABLE_ENTITY,
             ]);
         }
     }
 
     public function testRatingOnRecipes(AcceptanceTester $I)
     {
+        $this->getAuthenticated($I);
         $recipe1 = $this->createRecipe($I);
         $recipe2 = $this->createRecipe($I);
         $ratedRecipe1 = $this->createRating($I, $recipe1, 5);
@@ -259,6 +277,85 @@ class RecipesAPICest
         $I->assertEquals(1, $ratedRecipe2['rating']);
         $ratedRecipe2 = $this->createRating($I, $recipe2, 2);
         $I->assertEquals(1.33, $ratedRecipe2['rating']);
+    }
+
+    public function testOauth2AuthenticationValidationWhenWrongClientCredentials(AcceptanceTester $I)
+    {
+        $tokenUrl = $this->restModule->_getConfig('oauth_token_url');
+        $clientId = $this->restModule->_getConfig('oauth_client_id');
+        $clientSecret = $this->restModule->_getConfig('oauth_client_secret');
+        $grantType = $this->restModule->_getConfig('oauth_grant_type');
+        $I->setHeader('Authorization', 'Basic '.base64_encode($this->faker->word . ':' .$this->faker->word));
+        $I->sendPOST($tokenUrl, ['grant_type'=>$grantType]);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->seeResponseIsJson();
+        $I->seeResponseContainsJson(['error' => 'invalid_client', 'error_description' => 'The client credentials are invalid']);
+    }
+
+    public function testOauth2AuthenticationValidationWhenWrongGrantType(AcceptanceTester $I)
+    {
+        $tokenUrl = $this->restModule->_getConfig('oauth_token_url');
+        $clientId = $this->restModule->_getConfig('oauth_client_id');
+        $clientSecret = $this->restModule->_getConfig('oauth_client_secret');
+        $grantType = $this->restModule->_getConfig('oauth_grant_type');
+        $I->setHeader('Authorization', 'Basic '.base64_encode($this->faker->word . ':' .$this->faker->word));
+        $fakeGrantType = $this->faker->word;
+        $I->sendPOST($tokenUrl, ['grant_type'=>$fakeGrantType]);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->seeResponseIsJson();
+        $I->seeResponseContainsJson(['error' => 'unsupported_grant_type', 'error_description' => 'Grant type "'.$fakeGrantType.'" not supported']);
+    }
+
+    public function testProtectedEndpointsWithoutAuthentication(AcceptanceTester $I)
+    {
+        $this->getAuthenticated($I);
+        $recipe = $this->createRecipe($I);
+        $I->deleteHeader('Authorization');
+        $protectedEndpoints = [
+            ['verb' => 'POST', 'route' => '/recipes'],
+            ['verb' => 'PUT', 'route' => '/recipes/'.$recipe['id']],
+            ['verb' => 'PATCH', 'route' => '/recipes/'.$recipe['id']],
+            ['verb' => 'DELETE', 'route' => '/recipes/'.$recipe['id']],
+        ];
+        foreach($protectedEndpoints as $endpoint) {
+            $I->{'send'.$endpoint['verb']}($endpoint['route'], $this->generateRecipeData());
+            $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+            $I->seeResponseIsJson();
+            $I->seeResponseContainsJson([
+                'type'    => 'UnauthorizedException',
+                'message' => 'Token not present',
+                'code'    => HttpCode::UNAUTHORIZED
+            ]);
+        }
+    }
+
+    public function testProtectedEndpointsWithInvalidToken(AcceptanceTester $I)
+    {
+        $accessToken = $this->getAuthenticated($I);
+        $recipe = $this->createRecipe($I);
+
+        $accessTokenParts = explode('.', $accessToken);
+        $payload = $accessTokenParts[1];
+        $accessTokenParts[1] = substr_replace($payload, '', rand(0,strlen($payload)), '1');
+        $accessToken = implode('.', $accessTokenParts);
+        $I->amBearerAuthenticated($accessToken);
+
+        $protectedEndpoints = [
+            ['verb' => 'POST', 'route' => '/recipes'],
+            ['verb' => 'PUT', 'route' => '/recipes/'.$recipe['id']],
+            ['verb' => 'PATCH', 'route' => '/recipes/'.$recipe['id']],
+            ['verb' => 'DELETE', 'route' => '/recipes/'.$recipe['id']],
+        ];
+        foreach($protectedEndpoints as $endpoint) {
+            $I->{'send'.$endpoint['verb']}($endpoint['route'], $this->generateRecipeData());
+            $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+            $I->seeResponseIsJson();
+            $I->seeResponseContainsJson([
+                'type'    => 'UnauthorizedException',
+                'message' => 'Invalid token',
+                'code'    => HttpCode::UNAUTHORIZED
+            ]);
+        }
     }
 
     protected function createRating(AcceptanceTester $I, $recipe, $rating)
@@ -326,6 +423,7 @@ class RecipesAPICest
 
     protected function createRecipes(AcceptanceTester $I, $numOfRecipes)
     {
+        $recipes = [];
         for ($i = 0; $i <= ($numOfRecipes - 1); $i++) {
             $recipes[$i] = $this->createRecipe($I);
         }
@@ -350,6 +448,26 @@ class RecipesAPICest
         $response = (new JsonArray($I->grabResponse()))->toArray();
         $I->assertArraySubset($recipeResponseData, $response['data']);
         return $response['data'];
+    }
+
+    protected function getAuthenticated(AcceptanceTester $I)
+    {
+        $tokenUrl = $this->restModule->_getConfig('oauth_token_url');
+        $clientId = $this->restModule->_getConfig('oauth_client_id');
+        $clientSecret = $this->restModule->_getConfig('oauth_client_secret');
+        $grantType = $this->restModule->_getConfig('oauth_grant_type');
+        # this does not work! instead use Authentication Basic Header
+        // $I->amHttpAuthenticated('testclient', 'testpass');
+        $I->setHeader('Authorization', 'Basic '.base64_encode($clientId . ':' .$clientSecret));
+        $I->sendPOST($tokenUrl, ['grant_type'=>$grantType]);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->seeResponseIsJson();
+        $response = (new JsonArray($I->grabResponse()))->toArray();
+        $I->assertArrayHasKey('access_token', $response);
+        $I->assertNotEmpty($response['access_token']);
+        $I->deleteHeader('Authorization');
+        $I->amBearerAuthenticated($response['access_token']);
+        return $response['access_token'];
     }
 
     protected function generateRecipeData()

@@ -16,6 +16,10 @@ modules:
         - REST:
             depends: PhpBrowser
             url: '%APP_URL%/api/v1'
+            oauth_token_url: '%APP_OAUTH_TOKEN_URL%'
+            oauth_client_id: '%APP_OAUTH_CLIENT_ID%'
+            oauth_client_secret: '%APP_OAUTH_CLIENT_SECRET%'
+            oauth_grant_type: '%APP_OAUTH_GRANT_TYPE%'
         - Db:
             dsn: '%DB_CONNECTION%:host=%DB_HOST%;dbname=%DB_NAME%'
             user: '%DB_USER%'
