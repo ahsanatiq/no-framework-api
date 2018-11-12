@@ -41,6 +41,7 @@ class Application
         $this->router    = $router;
 
         $this->registerConfig();
+        $this->registerMiddlewares();
         $this->registerRoutes();
         $this->registerDbConnection();
         $this->registerRepositories();
@@ -78,6 +79,11 @@ class Application
             $router = $this->router;
             require($file->getRealPath());
         }
+    }
+
+    private function registerMiddlewares()
+    {
+        $this->router->aliasMiddleware('auth', \App\Middlewares\Authenticate::class);
     }
 
     private function registerDbConnection()

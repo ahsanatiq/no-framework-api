@@ -59,6 +59,7 @@ class RecipeController extends BaseController
     public function delete($recipeId)
     {
         $result = $this->recipeService->delete($recipeId);
+        logger()->info('user deleted the recipe', ['user'=>request()->get('tokenInfo')]);
         return ['success'=>$result];
     }
 }

@@ -12,15 +12,23 @@ class OauthController extends BaseController
 
     public function getToken()
     {
-        $this->oauth->handleTokenRequest(\OAuth2\Request::createFromGlobals())->send();
+        $response = $this->oauth->handleTokenRequest(\OAuth2\Request::createFromGlobals());
+        logger()->info($response->getStatusCode() == 200 ? 'Access token granted.' : 'Access token denied.');
+        $response->send();
     }
 
-    public function getProtected()
+    public function getAuthorize()
     {
-        if (!$this->oauth->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
-            $this->oauth->getResponse()->send();
+        $request = \OAuth2\Request::createFromGlobals();
+        $response = new \OAuth2\Response();
+        if (!$this->oauth->validateAuthorizeRequest($request, $response)) {
+            logger()->info('Authorize code denied.');
+            $response->send();
             die;
         }
-        return 'thats secret';
+        $this->oauth->handleAuthorizeRequest($request, $response, true);
+        $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
+        logger()->info('Authorize code granted.');
+        return ['success'=>true, 'code'=> $code];
     }
 }

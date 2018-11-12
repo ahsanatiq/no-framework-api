@@ -41,7 +41,9 @@ class RecipeService extends BaseService
     public function create($data)
     {
         $this->recipeValidator->validate($data);
-        return $this->recipeRepository->create($data);
+        $recipe = $this->recipeRepository->create($data);
+        logger()->info('Recipe created.', ['recipe_id'=> $recipe['id']]);
+        return $recipe;
     }
 
     public function update($data, $id)
@@ -50,13 +52,17 @@ class RecipeService extends BaseService
         $this->recipeValidator->validate($data);
 
         $recipe = $this->getById($id);
-        return $this->recipeRepository->update($data, $recipe['id']);
+        $updatedRecipe = $this->recipeRepository->update($data, $recipe['id']);
+        logger()->info('Recipe updated.', ['recipe_id'=> $updatedRecipe['id']]);
+        return $updatedRecipe;
     }
 
     public function delete($id)
     {
         $recipe = $this->getById($id);
-        return $this->recipeRepository->delete($recipe['id']);
+        $result = $this->recipeRepository->delete($recipe['id']);
+        logger()->info('Recipe deleted.', ['recipe_id'=> $recipe['id']]);
+        return $result;
     }
 
     public function createRating($data, $recipeId)
@@ -65,7 +71,9 @@ class RecipeService extends BaseService
         $this->ratingValidator->validate($data);
         $rating = $this->recipeRepository->createRating($data, $recipeId);
         dispatcher()->dispatch(new NewRatingCreatedEvent($recipeId, $rating));
-        return $this->getById($recipeId);
+        $recipe = $this->getById($recipeId);
+        logger()->info('Recipe has been rated.', ['recipe_id' => $recipe['id'], 'rating' => $data['rating']]);
+        return $recipe;
     }
 
     public function updateRating($recipeId)

@@ -9,6 +9,7 @@ class OauthUsers extends AbstractMigration
     {
         $table = $this->table('oauth_users');
         $table
+        ->addColumn('user_id', 'string', ['limit' => 80])
         ->addColumn('username', 'string', ['limit' => 80])
         ->addColumn('password', 'string', ['limit' => 80])
         ->addColumn('first_name', 'string', ['null'=>true, 'limit' => 80])

@@ -77,7 +77,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     {
         $recipe = $this->getById($recipeId);
         $rating = $recipe->ratings()->average('rating');
-        $recipe->rating = $rating;
+        $recipe->rating = round($rating, 2);
         if ($recipe->save()) {
             return $recipe;
         }

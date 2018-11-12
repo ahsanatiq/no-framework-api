@@ -6,6 +6,8 @@ services:
         restart: unless-stopped
         volumes:
             - ./recipe-service:/server/http
+            - ./data/keys:/server/keys
+            - ./data/logs:/server/logs
         ports:
             - "80:80"
             - "443:443"
@@ -13,7 +15,7 @@ services:
             - postgres
         env_file:
             - ./recipe-service/.env
-# Postgres container
+# Postgres container for Recipe Service
     postgres:
         image: onjin/alpine-postgres:9.5
         restart: unless-stopped
@@ -33,6 +35,7 @@ services:
         volumes:
             - ./oauth-service:/server/http
             - ./data/keys:/server/keys
+            - ./data/logs:/server/logs
         ports:
             - "8001:80"
             - "4431:443"
@@ -53,3 +56,9 @@ services:
             POSTGRES_USER: hellofresh
             POSTGRES_PASSWORD: hellofresh
             POSTGRES_DB: hellofresh
+# Redis container for Message Queue
+    redis:
+        image: sickp/alpine-redis:3.2.2
+        restart: unless-stopped
+        ports:
+            - "6379:6379"

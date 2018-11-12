@@ -13,8 +13,6 @@ class Application
 {
     public $container;
     public $config;
-    public $db;
-    public $events;
     public $finder;
     public $request;
     public $response;
