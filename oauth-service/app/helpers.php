@@ -29,6 +29,13 @@ if (!function_exists('request')) {
     }
 }
 
+if (!function_exists('logger')) {
+    function logger()
+    {
+        return container()->make('logger');
+    }
+}
+
 if (!function_exists('loadEnvironmentFromFile')) {
     function loadEnvironmentFromFile($file)
     {

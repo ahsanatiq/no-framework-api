@@ -36,6 +36,14 @@ if (!function_exists('dispatcher')) {
     }
 }
 
+
+if (!function_exists('logger')) {
+    function logger()
+    {
+        return container()->make('logger');
+    }
+}
+
 if (!function_exists('currentUrl')) {
     function currentUrl()
     {

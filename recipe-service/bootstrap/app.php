@@ -40,6 +40,21 @@ $request = Request::capture();
 $container->instance('Illuminate\Http\Request', $request);
 $container->alias('Illuminate\Http\Request', 'request');
 
+$container->singleton('Monolog\Logger', function($container){
+    $config = $container->make('config');
+    $logger = new \Monolog\Logger($config['app.name']);
+    $formatter = new Monolog\Formatter\LineFormatter(null, null, false, true);
+    $handler = new \Monolog\Handler\RotatingFileHandler(
+        $config['app.log_file'],
+        $config['app.log_days'],
+        constant('\Monolog\Logger::'.strtoupper($config['app.log_level']))
+    );
+    $handler->setFormatter($formatter);
+    $logger->pushHandler($handler);
+    return $logger;
+});
+$container->alias('Monolog\Logger', 'logger');
+
 $capsule = new DbCapsule($container);
 $capsule->setEventDispatcher($dispatcher);
 $capsule->setAsGlobal();
@@ -53,6 +68,4 @@ $validation = new ValidationFactory($translator, $container);
 $container->instance('Illuminate\Validation\Factory', $validation);
 $container->alias('Illuminate\Validation\Factory', 'validation');
 
-
 $container->singleton('app', 'App\Application');
-return $container->make('app');
