@@ -1,4 +1,4 @@
 <?php
 
-$app = require(__DIR__ . '/../bootstrap/app.php');
-$app->run();
+require(__DIR__ . '/../bootstrap/app.php');
+app()->run();
