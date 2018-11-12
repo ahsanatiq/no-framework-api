@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b29e25d2e0d54f9be8d366488f072f3",
+    "content-hash": "7ad1da567728aee0dfa01f0f0c039b21",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -697,51 +697,6 @@
             "description": "The Illuminate Http package.",
             "homepage": "https://laravel.com",
             "time": "2018-10-19T04:42:40+00:00"
-        },
-        {
-            "name": "illuminate/log",
-            "version": "v5.7.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/illuminate/log.git",
-                "reference": "ee6f89446d898e993cb16c18dd66eb09fe67fc34"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/log/zipball/ee6f89446d898e993cb16c18dd66eb09fe67fc34",
-                "reference": "ee6f89446d898e993cb16c18dd66eb09fe67fc34",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/contracts": "5.7.*",
-                "illuminate/support": "5.7.*",
-                "monolog/monolog": "^1.11",
-                "php": "^7.1.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.7-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Illuminate\\Log\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "The Illuminate Log package.",
-            "homepage": "https://laravel.com",
-            "time": "2018-10-06T18:48:42+00:00"
         },
         {
             "name": "illuminate/pipeline",
@@ -2224,6 +2179,51 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "illuminate/log",
+            "version": "v5.7.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/log.git",
+                "reference": "ee6f89446d898e993cb16c18dd66eb09fe67fc34"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/log/zipball/ee6f89446d898e993cb16c18dd66eb09fe67fc34",
+                "reference": "ee6f89446d898e993cb16c18dd66eb09fe67fc34",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.7.*",
+                "illuminate/support": "5.7.*",
+                "monolog/monolog": "^1.11",
+                "php": "^7.1.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Log\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Log package.",
+            "homepage": "https://laravel.com",
+            "time": "2018-10-06T18:48:42+00:00"
+        },
         {
             "name": "squizlabs/php_codesniffer",
             "version": "3.3.2",
