@@ -13,6 +13,8 @@ services:
             - "443:443"
         depends_on:
             - postgres
+            - oauth-service
+            - redis
         env_file:
             - ./recipe-service/.env
 # Postgres container for Recipe Service
@@ -62,3 +64,11 @@ services:
         restart: unless-stopped
         ports:
             - "6379:6379"
+# Elasticsearch container for Search service
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
+        restart: unless-stopped
+        ports:
+          - 9200:9200
+        volumes:
+          - ./data/elasticsearch:/usr/share/elasticsearch/data
