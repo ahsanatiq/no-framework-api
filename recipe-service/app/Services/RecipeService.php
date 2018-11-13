@@ -2,6 +2,9 @@
 namespace App\Services;
 
 use App\Events\NewRatingCreatedEvent;
+use App\Events\RecipeCreatedEvent;
+use App\Events\RecipeDeletedEvent;
+use App\Events\RecipeUpdatedEvent;
 use App\Repositories\Contracts\RecipeRepositoryInterface;
 use App\Services\Validators\RatingValidator;
 use App\Services\Validators\RecipeValidator;
@@ -42,6 +45,7 @@ class RecipeService extends BaseService
     {
         $this->recipeValidator->validate($data);
         $recipe = $this->recipeRepository->create($data);
+        dispatcher()->dispatch(new RecipeCreatedEvent($recipe));
         logger()->info('Recipe created.', ['recipe_id'=> $recipe['id']]);
         return $recipe;
     }
@@ -53,6 +57,7 @@ class RecipeService extends BaseService
 
         $recipe = $this->getById($id);
         $updatedRecipe = $this->recipeRepository->update($data, $recipe['id']);
+        dispatcher()->dispatch(new RecipeUpdatedEvent($updatedRecipe));
         logger()->info('Recipe updated.', ['recipe_id'=> $updatedRecipe['id']]);
         return $updatedRecipe;
     }
@@ -61,6 +66,7 @@ class RecipeService extends BaseService
     {
         $recipe = $this->getById($id);
         $result = $this->recipeRepository->delete($recipe['id']);
+        dispatcher()->dispatch(new RecipeDeletedEvent($recipe));
         logger()->info('Recipe deleted.', ['recipe_id'=> $recipe['id']]);
         return $result;
     }

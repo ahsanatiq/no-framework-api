@@ -57,3 +57,19 @@ if (!function_exists('loadEnvironmentFromFile')) {
         return (new Dotenv\Dotenv(dirname($file), basename($file)))->overload();
     }
 }
+
+if (!function_exists('container_instance')) {
+    function container_instance()
+    {
+        class App extends Illuminate\Container\Container
+        {
+            public function isDownForMaintenance()
+            {
+                return false;
+            }
+        }
+        $container = new App;
+        Illuminate\Container\Container::setInstance($container);
+        return $container;
+    }
+}

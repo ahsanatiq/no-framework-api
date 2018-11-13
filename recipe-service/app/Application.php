@@ -105,6 +105,14 @@ class Application
             [\App\Events\NewRatingCreatedEvent::class],
             \App\Listeners\UpdateRecipeRating::class
         );
+        $this->events->listen(
+            [
+                \App\Events\RecipeCreatedEvent::class,
+                \App\Events\RecipeUpdatedEvent::class,
+                \App\Events\RecipeDeletedEvent::class,
+            ],
+            \App\Listeners\QueueRecipeEvents::class
+        );
     }
 
     private function checkHeadersForEnv()

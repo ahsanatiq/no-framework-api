@@ -12,4 +12,11 @@ return [
         'charset'   => 'utf8',
         'collation' => 'utf8_unicode_ci',
     ],
+    'redis' => [
+        'driver'    => 'predis',
+        'host'      => getenv('REDIS_HOST') ?: 'localhost',
+        'password'  => getenv('REDIS_PASSWORD') ?: null,
+        'port'      => getenv('REDIS_PORT') ?: '6379',
+        'database'  => getenv('REDIS_DATABASE') ?: 0,
+    ],
 ];

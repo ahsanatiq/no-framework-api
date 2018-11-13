@@ -19,7 +19,6 @@
         "illuminate/config": "^5.7.0",
         "illuminate/database": "^5.7.0",
         "illuminate/events": "^5.7.0",
-        "illuminate/log": "^5.7.0",
         "illuminate/validation": "^5.7.0",
         "illuminate/pagination": "^5.7",
         "league/fractal": "^0.17.0",
@@ -30,7 +29,9 @@
         "vlucas/phpdotenv": "^2.5",
         "jwage/purl": "^0.0.10",
         "lcobucci/jwt": "^3.2",
-        "monolog/monolog": "^1.24"
+        "monolog/monolog": "^1.24",
+        "illuminate/queue": "^5.7",
+        "illuminate/redis": "^5.7"
     },
     "require-dev": {
         "codeception/codeception": "^2.5",
