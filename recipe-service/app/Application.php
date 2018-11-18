@@ -83,7 +83,8 @@ class Application
 
     private function registerMiddlewares()
     {
-        $this->router->aliasMiddleware('auth', \App\Middlewares\Authenticate::class);
+        $this->router->aliasMiddleware('auth', \App\Middlewares\AuthenticateMiddleware::class);
+        $this->router->aliasMiddleware('json', \App\Middlewares\JsonHeaderMiddleware::class);
     }
 
     private function registerDbConnection()
@@ -117,11 +118,15 @@ class Application
 
     private function checkHeadersForEnv()
     {
+        $commandArgs = parseFileArguments();
         if (isset($_SERVER['HTTP_APP_ENV']) && !empty($_SERVER['HTTP_APP_ENV'])) {
             $envFile = __DIR__.'/../.env.'.$_SERVER['HTTP_APP_ENV'];
-            if (file_exists($envFile)) {
-                loadEnvironmentFromFile($envFile);
-            }
+        }
+        else if (isset($commandArgs['env']) && !empty($commandArgs['env'])) {
+            $envFile = __DIR__.'/../.env.'.$commandArgs['env'];
+        }
+        if (!empty($envFile) && file_exists($envFile)) {
+            loadEnvironmentFromFile($envFile);
         }
     }
 }
