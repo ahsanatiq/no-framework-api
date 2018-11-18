@@ -9,20 +9,20 @@ services:
             - ./data/keys:/server/keys
             - ./data/logs:/server/logs
         ports:
-            - "80:80"
-            - "443:443"
+            - "8001:80"
+            - "4431:443"
         depends_on:
-            - postgres
+            - recipe-postgres
             - oauth-service
             - redis
         env_file:
             - ./recipe-service/.env
 # Postgres container for Recipe Service
-    postgres:
+    recipe-postgres:
         image: onjin/alpine-postgres:9.5
         restart: unless-stopped
         ports:
-            - "5432:5432"
+            - "54321:5432"
         volumes:
             - ./data/postgres:/var/lib/postgresql/data
         environment:
@@ -39,8 +39,8 @@ services:
             - ./data/keys:/server/keys
             - ./data/logs:/server/logs
         ports:
-            - "8001:80"
-            - "4431:443"
+            - "8002:80"
+            - "4432:443"
         depends_on:
             - postgres-oauth
         env_file:
@@ -50,7 +50,7 @@ services:
         image: onjin/alpine-postgres:9.5
         restart: unless-stopped
         ports:
-            - "54321:5432"
+            - "54322:5432"
         volumes:
             - ./data/postgres-auth:/var/lib/postgresql/data
         environment:
@@ -58,12 +58,21 @@ services:
             POSTGRES_USER: hellofresh
             POSTGRES_PASSWORD: hellofresh
             POSTGRES_DB: hellofresh
-# Redis container for Message Queue
-    redis:
-        image: sickp/alpine-redis:3.2.2
+# Search Service container
+    search-service:
+        build: ./search-service
         restart: unless-stopped
+        volumes:
+            - ./search-service:/server/http
+            - ./data/logs:/server/logs
         ports:
-            - "6379:6379"
+            - "8003:80"
+            - "4433:443"
+        depends_on:
+            - elasticsearch
+            - redis
+        env_file:
+            - ./search-service/.env
 # Elasticsearch container for Search service
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
@@ -72,3 +81,9 @@ services:
           - 9200:9200
         volumes:
           - ./data/elasticsearch:/usr/share/elasticsearch/data
+# Redis container for Message Queue
+    redis:
+        image: sickp/alpine-redis:3.2.2
+        restart: unless-stopped
+        ports:
+            - "63791:6379"
