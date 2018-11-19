@@ -73,11 +73,12 @@ class RecipeService extends BaseService
 
     public function createRating($data, $recipeId)
     {
-        $this->getById($recipeId);
+        $recipe = $this->getById($recipeId);
         $this->ratingValidator->validate($data);
         $rating = $this->recipeRepository->createRating($data, $recipeId);
-        dispatcher()->dispatch(new NewRatingCreatedEvent($recipeId, $rating));
+        dispatcher()->dispatch(new NewRatingCreatedEvent($recipe, $rating));
         $recipe = $this->getById($recipeId);
+        dispatcher()->dispatch(new RecipeUpdatedEvent($recipe));
         logger()->info('Recipe has been rated.', ['recipe_id' => $recipe['id'], 'rating' => $data['rating']]);
         return $recipe;
     }

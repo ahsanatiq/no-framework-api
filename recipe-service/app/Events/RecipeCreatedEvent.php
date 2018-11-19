@@ -5,7 +5,8 @@ use App\Events\Contracts\RecipeEventInterface;
 
 class RecipeCreatedEvent implements RecipeEventInterface
 {
-    public $recipe;
+    private $recipe;
+    const EVENT_TYPE = 'create';
 
     public function __construct($recipe)
     {
@@ -15,5 +16,10 @@ class RecipeCreatedEvent implements RecipeEventInterface
     public function getRecipe()
     {
         return $this->recipe;
+    }
+
+    public function getEventType()
+    {
+        return self::EVENT_TYPE;
     }
 }

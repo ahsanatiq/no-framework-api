@@ -3,12 +3,13 @@ namespace App\Events;
 
 class NewRatingCreatedEvent
 {
-    public $recipeId;
+    public $recipe;
     public $rating;
 
-    public function __construct($recipeId, $rating)
+    public function __construct($recipe, $rating)
     {
-        $this->recipeId = $recipeId;
+        $this->recipe = $recipe;
         $this->rating = $rating;
     }
+
 }

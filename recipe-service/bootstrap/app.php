@@ -69,7 +69,7 @@ $container->instance('Illuminate\Database\Capsule\Manager', $capsule);
 $container->alias('Illuminate\Database\Capsule\Manager', 'database');
 
 (new EventServiceProvider($container))->register();
-$container->bind('redis', function ($container) {
+$container->singleton('redis', function ($container) {
     $config = $container->make('config');
     return new RedisManager($container, $config['db']['redis']['driver'], [
         'default' => [
@@ -80,13 +80,17 @@ $container->bind('redis', function ($container) {
         ],
     ]);
 });
-$queue = new Queue($container);
-$queue->addConnection([
-    'driver' => 'redis',
-    'connection' => 'default',
-    'queue' => 'default',
-], 'redis');
-$container->instance('Illuminate\Queue\QueueManager', $queue->getQueueManager());
+
+$container->singleton('Illuminate\Queue\QueueManager', function($container) {
+    $config = $container->make('config');
+    $queue = new Queue($container);
+    $queue->addConnection([
+        'driver' => 'redis',
+        'connection' => 'default',
+        'queue' => $config['app.queue'],
+    ], 'redis');
+    return $queue->getQueueManager();
+});
 $container->alias('Illuminate\Queue\QueueManager', 'queue');
 
 $loader = new FileLoader(new Filesystem, __DIR__.'/../resources/lang');
@@ -96,3 +100,4 @@ $container->instance('Illuminate\Validation\Factory', $validation);
 $container->alias('Illuminate\Validation\Factory', 'validation');
 
 $container->singleton('app', 'App\Application');
+return $container->make('app');

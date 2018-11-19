@@ -17,7 +17,12 @@ class QueueRecipeEvents
 
     public function handle(RecipeEventInterface $event)
     {
-        logger()->info('queued the job to redis', ['recipe_id'=>$event->recipe['id']]);
-        $this->queue->connection('redis')->push('App\Jobs\RecipeJobDoesnotExists@handle', ['recipe' => $event->getRecipe()]);
+        $recipe = $event->getRecipe();
+        $this->queue->connection('redis')->push('App\Jobs\UpdateElasticsearchJob@handle', [
+            'recipe' => $recipe,
+            'event_type' => $event->getEventType(),
+            'app_env' => config()->get('app.env')
+        ]);
+        logger()->info('queued the job to redis', ['recipe_id'=>$recipe['id']]);
     }
 }
