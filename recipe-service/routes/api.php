@@ -1,6 +1,6 @@
 <?php
 
-$router->prefix('/api/v1/')->namespace('App\Controllers')->group(function ($router) {
+$router->prefix('/api/v1/')->namespace('App\Controllers')->middleware('json')->group(function ($router) {
 
     $router->get('recipes', 'RecipeController@getList');
     $router->get('recipes/{id}', 'RecipeController@get')->where('id', '[0-9]+');

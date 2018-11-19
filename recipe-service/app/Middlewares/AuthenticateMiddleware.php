@@ -9,7 +9,7 @@ use Lcobucci\JWT\Signer\Keychain;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 
-class Authenticate
+class AuthenticateMiddleware
 {
 
     public function handle(Request $request, Closure $next)
