@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection as LaravelCollection;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -14,7 +14,7 @@ abstract class BaseController
     public function toFractalResponse($data, $transformer, LengthAwarePaginator $paginator = null)
     {
         $fractal = new Manager();
-        if ($data instanceof EloquentCollection) {
+        if ($data instanceof LaravelCollection) {
             $resource = new Collection($data, $transformer);
             if ($paginator && $data->count()) {
                 $paginator->withPath($this->stripPageAndPortFromUrl(currentUrl())->getUrl());
@@ -47,6 +47,10 @@ abstract class BaseController
 
     public function stripPageAndPortFromUrl($url)
     {
+        $appUrl = \Purl\Url::parse(config()->get('app.url'));
+        $url->set('host', $appUrl->get('host'));
+        $url->set('port', $appUrl->get('port'));
+        $url->set('scheme', $appUrl->get('scheme'));
         if (!empty($url->get('port')) && $url->get('port') == '80') {
             $url->set('port', '');
         }
