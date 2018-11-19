@@ -3,8 +3,8 @@ $envTesting = require '.env.testing.php';
 
 return [
     'paths' => [
-        'migrations' => __DIR__ . '/database/migrations',
-        'seeds'      => __DIR__ . '/database/seeds',
+        'migrations' => ['database' => __DIR__.'/database/migrations'],
+        'seeds'      => ['database' => __DIR__.'/database/seeds'],
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',

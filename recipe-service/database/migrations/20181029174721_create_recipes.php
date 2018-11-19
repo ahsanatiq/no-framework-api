@@ -1,5 +1,5 @@
 <?php
-namespace database\migrations;
+namespace database;
 
 use Phinx\Migration\AbstractMigration;
 use Phinx\Util\Literal;

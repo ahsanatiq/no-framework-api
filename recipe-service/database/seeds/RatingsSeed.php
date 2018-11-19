@@ -1,13 +1,20 @@
 <?php
-namespace database\seeds;
+namespace database;
 
 use Phinx\Seed\AbstractSeed;
 
 class RatingsSeed extends AbstractSeed
 {
+    public function getDependencies()
+    {
+        return [
+            'database\RecipesSeed',
+        ];
+    }
+
     public function run()
     {
-        $faker = Faker\Factory::create();
+        $faker = \Faker\Factory::create();
         $rowsRecipes = $this->fetchAll('SELECT * FROM recipes');
         foreach ($rowsRecipes as $rowRecipe) {
             foreach (range(1, 30) as $index) {
