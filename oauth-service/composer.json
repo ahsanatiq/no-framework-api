@@ -5,8 +5,7 @@
     "type": "project",
     "autoload": {
     	"psr-4": {
-    		"App\\": "app/",
-    		"Tests\\": "tests/"
+    		"App\\": "app/"
     	},
     	"files": [
     		"app/helpers.php"
