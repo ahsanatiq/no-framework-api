@@ -8,14 +8,14 @@ actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: '%APP_URL%'
+            url: http://%APP_HOST%
             headers:
                 APP_ENV: testing
         - \Helper\Acceptance
         - Asserts
         - REST:
             depends: PhpBrowser
-            url: '%APP_URL%/api/v1'
+            url: http://%APP_HOST%/api/v1
             oauth_token_url: '%APP_OAUTH_TOKEN_URL%'
             oauth_client_id: '%APP_OAUTH_CLIENT_ID%'
             oauth_client_secret: '%APP_OAUTH_CLIENT_SECRET%'
@@ -27,3 +27,7 @@ modules:
             dump: 'tests/_data/hellofresh.psql'
             cleanup: true # run populator before each test
             populate: true # run populator before all test
+        - Codeception\Module\Elasticsearch:
+            hosts: ['%ELASTICSEARCH_HOST%']
+            indexes: '%ELASTICSEARCH_INDEXES%'
+            cleanup: true

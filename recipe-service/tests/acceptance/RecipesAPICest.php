@@ -13,7 +13,7 @@ class RecipesAPICest
 
     public function _before(AcceptanceTester $I)
     {
-        $this->faker = FakerFactory::create();
+        $this->faker = FakerFactory::create('en_US');
         $I->haveHttpHeader('APP_ENV', 'testing');
     }
 
@@ -474,7 +474,7 @@ class RecipesAPICest
     {
         return [
             'name'        => $this->faker->word(),
-            'description' => $this->faker->paragraphs(3, true),
+            'description' => $this->faker->realText(),
             'prep_time'   => $this->faker->numberBetween(1, 9999),
             'difficulty'  => $this->faker->numberBetween(1, 3),
             'vegetarian'  => $this->faker->randomElement([true, false]),
