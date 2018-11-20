@@ -19,7 +19,7 @@ class RecipeController extends BaseController
     public function search(Request $request)
     {
         $recipesPaginated = $this->recipeService->getSearchPaginated(
-            $request->input('query'),
+            urldecode($request->input('query')),
             $this->getPerPage($request),
             $this->getPageNum($request)
         );
