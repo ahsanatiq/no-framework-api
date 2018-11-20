@@ -55,9 +55,13 @@ class RecipeRepository implements RecipeRepositoryInterface
             'path' => currentUrl(),
             'pageName' => config()->get('app.page_param'),
         ];
-        return container()->makeWith(LengthAwarePaginator::class, compact(
-            'items', 'total', 'perPage', 'pageNum', 'options'
-        ));
+        return container()->makeWith(LengthAwarePaginator::class, [
+            'items'=>$items,
+            'total'=>$total,
+            'perPage'=>$perPage,
+            'currentPage'=>$pageNum,
+            'options'=>$options
+        ]);
     }
 
     public function getById($recipeId)
