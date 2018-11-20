@@ -47,13 +47,9 @@ abstract class BaseController
 
     public function stripPageAndPortFromUrl($url)
     {
-        $appUrl = \Purl\Url::parse(config()->get('app.url'));
-        $url->set('host', $appUrl->get('host'));
-        $url->set('port', $appUrl->get('port'));
-        $url->set('scheme', $appUrl->get('scheme'));
-        if (!empty($url->get('port')) && $url->get('port') == '80') {
-            $url->set('port', '');
-        }
+        $url->set('scheme', null);
+        $url->set('host', null);
+        $url->set('port', null);
         if (!empty($url->query->get('page'))) {
             $url->query->remove('page');
         }
