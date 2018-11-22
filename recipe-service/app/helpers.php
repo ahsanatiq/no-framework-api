@@ -3,7 +3,7 @@
 if (!function_exists('container')) {
     function container()
     {
-        return Illuminate\Container\Container::getInstance();
+        return \Illuminate\Container\Container::getInstance();
     }
 }
 
@@ -54,58 +54,70 @@ if (!function_exists('currentUrl')) {
 if (!function_exists('loadEnvironmentFromFile')) {
     function loadEnvironmentFromFile($file)
     {
-        return (new Dotenv\Dotenv(dirname($file), basename($file)))->overload();
+        return (new \Dotenv\Dotenv(dirname($file), basename($file)))->overload();
     }
 }
 
 if (!function_exists('parseFileArguments')) {
-    function parseFileArguments($noopt = array()) {
+    function parseFileArguments($noopt = [])
+    {
         $result = [];
-        if(!isset($GLOBALS['argv']))
+        if (!isset($GLOBALS['argv'])) {
             return [];
+        }
         $params = $GLOBALS['argv'];
         reset($params);
-        while (list($tmp, $p) = each($params))
-        {
-            if ($p{0} == '-') {
-                $pname = substr($p, 1);
-                $value = true;
-                if ($pname{0} == '-') {
-                    // long-opt (--<param>)
-                    $pname = substr($pname, 1);
-                    if (strpos($p, '=') !== false) {
-                        // value specified inline (--<param>=<value>)
-                        list($pname, $value) = explode('=', substr($p, 2), 2);
-                    }
-                }
-                // check if next parameter is a descriptor or a value
+        while (list($tmp, $p) = each($params)) {
+            // $result = processParam($tmp, $p, $noopt);
+            $pResult = processParam($p);
+            if (!empty($pResult[0])) {
+                $pname = $pResult[0];
+                $value = $pResult[1];
                 $nextparm = current($params);
-                if (!in_array($pname, $noopt) && $value === true && $nextparm !== false && $nextparm{0} != '-') {
-                    list($tmp, $value) = each($params);
-                }
+                $value2 = checkPResult($pname, $noopt, $value, $nextparm);
+                $value = $value2 ?: $value;
                 $result[$pname] = $value;
             } else {
-                // param doesn't belong to any option
                 $result[] = $p;
             }
         }
         return $result;
     }
-}
 
-class AppContainer extends Illuminate\Container\Container
-{
-    public function isDownForMaintenance()
+    function checkPResult($pname, $noopt, $value, $nextparm)
     {
-        return false;
+        $value = '';
+        if (!in_array($pname, $noopt) && $value === true && $nextparm !== false && $nextparm{0} != '-') {
+            list($tmp, $value) = each($params);
+        }
+        return $value;
+    }
+
+    function processParam($p)
+    {
+        $result = [];
+        $pname = '';
+        $value = true;
+        if ($p{0} == '-') {
+            $pname = substr($p, 1);
+        }
+        if (!empty($pname) && $pname{0} == '-') {
+            // long-opt (--<param>)
+            $pname = substr($pname, 1);
+            if (strpos($p, '=') !== false) {
+                    // value specified inline (--<param>=<value>)
+                list($pname, $value) = explode('=', substr($p, 2), 2);
+            }
+        }
+        return [$pname, $value];
     }
 }
 
 if (!function_exists('container_instance')) {
     function container_instance()
     {
-        $container = new AppContainer;
-        Illuminate\Container\Container::setInstance($container);
+        $container = new App\Container;
+        \Illuminate\Container\Container::setInstance($container);
         return $container;
     }
 }

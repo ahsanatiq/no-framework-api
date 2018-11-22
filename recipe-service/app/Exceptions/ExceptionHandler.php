@@ -46,10 +46,10 @@ class ExceptionHandler
             'trace' => $e->getTrace()
         ];
 
-        logger()->$loggerLevel('Exception occured.', array_merge($data,$extraInfo));
+        logger()->$loggerLevel('Exception occured.', array_merge($data, $extraInfo));
 
         if (config()->get('app.env') != 'production') {
-           // $data = array_merge($data, $extraInfo);
+            $data = array_merge($data, $extraInfo);
         }
 
         return (new Response($data, $data['code']))->send();

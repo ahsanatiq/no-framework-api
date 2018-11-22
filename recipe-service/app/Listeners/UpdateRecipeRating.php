@@ -16,6 +16,9 @@ class UpdateRecipeRating
     public function handle(NewRatingCreatedEvent $event)
     {
         $recipe = $this->recipeService->updateRating($event->recipe['id']);
-        logger()->info('New rating event created. updating recipe average rating.', ['recipe_id'=> $event->recipe['id'], 'average_rating'=>$recipe['rating']]);
+        logger()->info('New rating event created. updating recipe average rating.', [
+            'recipe_id'=> $event->recipe['id'],
+            'average_rating'=>$recipe['rating']
+        ]);
     }
 }

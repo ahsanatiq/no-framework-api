@@ -51,15 +51,15 @@ abstract class BaseValidator
     public function sanitize($data)
     {
         $boolean = function ($data) {
-            return filter_var($data, FILTER_VALIDATE_BOOLEAN);
+            $result = filter_var($data, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            return $result===null ? 'null' : $result;
         };
         $filters = [];
-        if(!empty($this->filters)) {
+        if (!empty($this->filters)) {
             $filters = $this->filters;
         }
         foreach ($filters as $key => $value) {
-            if(empty($data[$key]))
-            {
+            if (empty($data[$key])) {
                 continue;
             }
             foreach ($value as $filter) {
@@ -72,6 +72,9 @@ abstract class BaseValidator
     protected function registerNotStrictBoolean()
     {
         $this->validator->extend('notStrictBoolean', function ($attribute, $value, $parameters, $validator) {
+            $attribute = $attribute ?: null;
+            $parameters = $parameters ?: null;
+            $validator = $validator ?: null;
             return in_array($value, [true, false, 'true', 'false', 0, 1, '0', '1']);
         });
     }

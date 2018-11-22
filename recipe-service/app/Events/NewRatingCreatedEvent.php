@@ -11,5 +11,4 @@ class NewRatingCreatedEvent
         $this->recipe = $recipe;
         $this->rating = $rating;
     }
-
 }
