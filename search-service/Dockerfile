@@ -18,4 +18,8 @@ WORKDIR ${APP_DIR}
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+
+RUN composer install
+RUN ./console.php consume:recipes
+
 EXPOSE 80

@@ -49,7 +49,7 @@ To validate your application's incoming HTTP request data, We've used [Illuminat
 
 To provide a standard & consistent output of API response data, we've used [League Fractal](https://github.com/league/fractal), so we can have presentation and transformation layer for our output data. All the transformation classes are stored in the `app/Transformers` directory. For the pagination of our results from the Eloqent models, we've used [Illuminate Pagination](https://github.com/illuminate/pagination).
 
-##### Unit & Acceptance Testing:
+##### Unit Testing:
 
 To test our application service, we've used [Codeception](https://github.com/codeception/codeception), Out of the box it allows us to have all three types of tests i-e unit, functional, and acceptance tests in a unified framework. In our case, we have unit tested the core business object "recipe", also written acceptance tests to check the integration & functionality of all the API's. All the test case, are stored in the `tests` directory. and can be run by the following command:
 

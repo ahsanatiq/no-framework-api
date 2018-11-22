@@ -14,5 +14,3 @@ Recipes information are being stored and updated in the Elasticsearch as the eve
 
 To update and fetch the information from Elasticsearch we have used the official client library [Elasticsearch-PHP](https://github.com/elastic/elasticsearch-php). All the queries are being executed on the elastsearch to fetch the recipes in fast and efficient way.
 
-
-
