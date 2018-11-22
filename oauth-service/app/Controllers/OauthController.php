@@ -23,6 +23,9 @@ class OauthController extends BaseController
         $response = new \OAuth2\Response();
         if (!$this->oauth->validateAuthorizeRequest($request, $response)) {
             logger()->info('Authorize code denied.');
+            if ($parameters = $response->getParameters()) {
+                return ['success'=>false, 'data'=> $parameters ?: null];
+            }
             $response->send();
             die;
         }
