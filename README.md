@@ -41,10 +41,6 @@ $ cp oauth-service/.env.dev oauth-service/.env
 $ cp search-service/.env.dev search-service/.env
 $ cp web-service/.env.dev web-service/.env
 $ docker-compose up -d
-$ docker exec -it ahsanatiq-recipe-service composer install
-$ docker exec -it ahsanatiq-oauth-service composer install
-$ docker exec -it ahsanatiq-search-service composer install
-$ docker exec -it ahsanatiq-web-service composer install
 $ docker exec -it ahsanatiq-recipe-postgres createdb -U hellofresh -O hellofresh hellofresh_testing
 $ docker exec -it ahsanatiq-oauth-service openssl genrsa -out /server/keys/id_rsa 2048
 $ docker exec -it ahsanatiq-oauth-service openssl rsa -in /server/keys/id_rsa -pubout -out /server/keys/id_rsa.pub

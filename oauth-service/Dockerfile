@@ -18,4 +18,7 @@ WORKDIR ${APP_DIR}
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install dependencies
+RUN ["composer", "install"]
+
 EXPOSE 80

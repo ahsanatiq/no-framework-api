@@ -12,13 +12,6 @@ echo "building containers..."
 printf "\n\n\n"
 docker-compose up -d
 printf "\n\n\n"
-echo "installing project dependencies..."
-printf "\n\n\n"
-docker exec -it ahsanatiq-recipe-service composer install
-docker exec -it ahsanatiq-oauth-service composer install
-docker exec -it ahsanatiq-search-service composer install
-docker exec -it ahsanatiq-web-service composer install
-printf "\n\n\n"
 echo "creating test database in recipe-service..."
 printf "\n\n\n"
 docker exec -it ahsanatiq-recipe-postgres createdb -U hellofresh -O hellofresh hellofresh_testing
