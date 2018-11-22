@@ -60,13 +60,13 @@ Now you can access the application via http://localhost:8000.
 Run the unit-tests in the Recipe-Service container:
 
 ```bash
-$ docker exec -it ahsanatiqapitest_recipe-service_1 php vendor/bin/codecept run
+$ docker exec -it ahsanatiq-recipe-service php vendor/bin/codecept run
 ```
 
 Run the acceptance-tests in the Web-Service container:
 
 ```bash
-$ docker exec -it ahsanatiqapitest_web-service_1 php vendor/bin/codecept run
+$ docker exec -it ahsanatiq-web-service php vendor/bin/codecept run
 ```
 
 ### API documentation
