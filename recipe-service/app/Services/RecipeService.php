@@ -43,6 +43,7 @@ class RecipeService extends BaseService
 
     public function create($data)
     {
+        $data = $this->recipeValidator->sanitize($data);
         $this->recipeValidator->validate($data);
         $recipe = $this->recipeRepository->create($data);
         dispatcher()->dispatch(new RecipeCreatedEvent($recipe));
@@ -52,6 +53,7 @@ class RecipeService extends BaseService
 
     public function update($data, $id)
     {
+        $data = $this->recipeValidator->sanitize($data);
         $this->recipeValidator->setMode('update');
         $this->recipeValidator->validate($data);
 

@@ -142,5 +142,6 @@ return [
     */
 
     'attributes' => [],
+    'notStrictBoolean' => 'The :attribute must be boolean (true, false)',
 
 ];

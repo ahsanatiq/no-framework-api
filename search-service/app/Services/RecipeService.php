@@ -29,6 +29,7 @@ class RecipeService extends BaseService
 
     public function create($data)
     {
+        $data = $this->recipeValidator->sanitize($data);
         $this->recipeValidator->validate($data);
         $recipe = $this->recipeRepository->create($data);
         logger()->info('Recipe created.', ['recipe_id'=> $recipe['id']]);
@@ -37,6 +38,7 @@ class RecipeService extends BaseService
 
     public function update($data, $recipeId)
     {
+        $data = $this->recipeValidator->sanitize($data);
         $this->recipeValidator->setMode('update')->validate($data);
         $recipe = $this->getById($recipeId);
         $updatedRecipe = $this->recipeRepository->update($data, $recipe['id']);

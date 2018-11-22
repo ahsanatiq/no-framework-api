@@ -3,6 +3,7 @@ namespace App\Services\Validators;
 
 use App\Exceptions\ValidationException;
 use Illuminate\Validation\Factory as ValidationFactory;
+use Illuminate\Validation\Validator;
 
 abstract class BaseValidator
 {
@@ -12,6 +13,7 @@ abstract class BaseValidator
     public function __construct(ValidationFactory $validator)
     {
         $this->validator = $validator;
+        $this->registerNotStrictBoolean();
     }
 
     public function setMode($mode)
@@ -44,5 +46,33 @@ abstract class BaseValidator
         }
 
         return true;
+    }
+
+    public function sanitize($data)
+    {
+        $boolean = function ($data) {
+            return filter_var($data, FILTER_VALIDATE_BOOLEAN);
+        };
+        $filters = [];
+        if(!empty($this->filters)) {
+            $filters = $this->filters;
+        }
+        foreach ($filters as $key => $value) {
+            if(empty($data[$key]))
+            {
+                continue;
+            }
+            foreach ($value as $filter) {
+                $data[$key] = ${$filter}($data[$key]);
+            }
+        }
+        return $data;
+    }
+
+    protected function registerNotStrictBoolean()
+    {
+        $this->validator->extend('notStrictBoolean', function ($attribute, $value, $parameters, $validator) {
+            return in_array($value, [true, false, 'true', 'false', 0, 1, '0', '1']);
+        });
     }
 }

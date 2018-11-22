@@ -46,4 +46,25 @@ abstract class BaseValidator
 
         return true;
     }
+
+    public function sanitize($data)
+    {
+        $boolean = function ($data) {
+            return filter_var($data, FILTER_VALIDATE_BOOLEAN);
+        };
+        $filters = [];
+        if(!empty($this->filters)) {
+            $filters = $this->filters;
+        }
+        foreach ($filters as $key => $value) {
+            if(empty($data[$key]))
+            {
+                continue;
+            }
+            foreach ($value as $filter) {
+                $data[$key] = ${$filter}($data[$key]);
+            }
+        }
+        return $data;
+    }
 }
