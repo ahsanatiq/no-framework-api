@@ -41,16 +41,16 @@ $ cp oauth-service/.env.dev oauth-service/.env
 $ cp search-service/.env.dev search-service/.env
 $ cp web-service/.env.dev web-service/.env
 $ docker-compose up -d
-$ docker exec -it ahsanatiqapitest_recipe-service_1 composer install
-$ docker exec -it ahsanatiqapitest_oauth-service_1 composer install
-$ docker exec -it ahsanatiqapitest_search-service_1 composer install
-$ docker exec -it ahsanatiqapitest_web-service_1 composer install
-$ docker exec -it ahsanatiqapitest_recipe-postgres_1 createdb -U hellofresh -O hellofresh hellofresh_testing
-$ docker exec -it ahsanatiqapitest_oauth-service_1 openssl genrsa -out /server/keys/id_rsa 2048
-$ docker exec -it ahsanatiqapitest_oauth-service_1 openssl rsa -in /server/keys/id_rsa -pubout -out /server/keys/id_rsa.pub
-$ docker exec -it ahsanatiqapitest_recipe-service_1 php vendor/bin/phinx migrate
-$ docker exec -it ahsanatiqapitest_oauth-service_1 php vendor/bin/phinx migrate
-$ docker exec -it ahsanatiqapitest_oauth-service_1 php vendor/bin/phinx seed:run
+$ docker exec -it ahsanatiq-recipe-service composer install
+$ docker exec -it ahsanatiq-oauth-service composer install
+$ docker exec -it ahsanatiq-search-service composer install
+$ docker exec -it ahsanatiq-web-service composer install
+$ docker exec -it ahsanatiq-recipe-postgres createdb -U hellofresh -O hellofresh hellofresh_testing
+$ docker exec -it ahsanatiq-oauth-service openssl genrsa -out /server/keys/id_rsa 2048
+$ docker exec -it ahsanatiq-oauth-service openssl rsa -in /server/keys/id_rsa -pubout -out /server/keys/id_rsa.pub
+$ docker exec -it ahsanatiq-recipe-service php vendor/bin/phinx migrate
+$ docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx migrate
+$ docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx seed:run
 ```
 
 Now you can access the application via http://localhost:8000.
