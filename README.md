@@ -24,23 +24,34 @@ A simple application to consume recipe api services. This is for demo purposes a
 
 Development environment requirements:
 
+- Git
 - Docker >= 17.06 CE
 - Docker Compose
 
 Setting up your development environment on your local machine using setup script:
 
 ```bash
+$ git clone https://github.com/hellofreshdevtests/ahsanatiq-api-test.git
+$ cd ahsanatiq-api-test
+$ git checkout dev
 $ ./setup.sh
 ```
 
 Manual setup:
 
 ```bash
+$ git clone https://github.com/hellofreshdevtests/ahsanatiq-api-test.git
+$ cd ahsanatiq-api-test
+$ git checkout dev
 $ cp recipe-service/.env.dev recipe-service/.env
 $ cp oauth-service/.env.dev oauth-service/.env
 $ cp search-service/.env.dev search-service/.env
 $ cp web-service/.env.dev web-service/.env
 $ docker-compose up -d
+$ docker exec -it ahsanatiq-recipe-service composer install
+$ docker exec -it ahsanatiq-oauth-service composer install
+$ docker exec -it ahsanatiq-search-service composer install
+$ docker exec -it ahsanatiq-web-service composer install
 $ docker exec -it ahsanatiq-recipe-postgres createdb -U hellofresh -O hellofresh hellofresh_testing
 $ docker exec -it ahsanatiq-oauth-service openssl genrsa -out /server/keys/id_rsa 2048
 $ docker exec -it ahsanatiq-oauth-service openssl rsa -in /server/keys/id_rsa -pubout -out /server/keys/id_rsa.pub
