@@ -13,16 +13,16 @@ class WorkerExceptionHandler implements ExceptionHandler
 
     public function render($request, Exception $e)
     {
-        $this->output($e);
+        $this->output($e, $request);
     }
 
     public function renderForConsole($output, Exception $e)
     {
-        $this->output($e);
+        $this->output($e, $output);
     }
 
-    public function output($e)
+    public function output($e, $extra = null)
     {
-        echo PHP_EOL.json_encode(['message'=>$e->getMessage(),'trace'=>$e->getTrace()]).PHP_EOL;
+        echo PHP_EOL.json_encode(['message'=>$e->getMessage(),'trace'=>$e->getTrace(), 'extra'=>$extra]).PHP_EOL;
     }
 }

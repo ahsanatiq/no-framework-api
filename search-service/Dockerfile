@@ -20,6 +20,5 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install dependencies
 RUN composer install
-CMD ["nohup", "./console.php", "consume:recipes"]
 
 EXPOSE 80

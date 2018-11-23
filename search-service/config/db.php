@@ -10,7 +10,9 @@ return [
         'database'  => getenv('REDIS_DATABASE') ?: 0,
     ],
     'elasticsearch' => [
-        'hosts'         => getenv('ELASTICSEARCH_HOSTS') ? explode(',', getenv('ELASTICSEARCH_HOSTS')) : ['elasticsearch'],
+        'hosts'         => getenv('ELASTICSEARCH_HOSTS')
+                            ? explode(',', getenv('ELASTICSEARCH_HOSTS'))
+                            : ['elasticsearch'],
         'password'      => getenv('ELASTICSEARCH_PASSWORD') ?: null,
         'recipes_index' => getenv('ELASTICSEARCH_RECIPES_INDEX') ?: 'recipes',
     ],

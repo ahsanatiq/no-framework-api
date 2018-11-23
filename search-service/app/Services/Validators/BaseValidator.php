@@ -53,12 +53,11 @@ abstract class BaseValidator
             return filter_var($data, FILTER_VALIDATE_BOOLEAN);
         };
         $filters = [];
-        if(!empty($this->filters)) {
+        if (!empty($this->filters)) {
             $filters = $this->filters;
         }
         foreach ($filters as $key => $value) {
-            if(empty($data[$key]))
-            {
+            if (empty($data[$key])) {
                 continue;
             }
             foreach ($value as $filter) {

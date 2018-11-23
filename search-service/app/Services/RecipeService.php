@@ -48,17 +48,16 @@ class RecipeService extends BaseService
 
     public function delete($recipeId)
     {
-       $recipe = $this->getById($recipeId);
-       $result = $this->recipeRepository->delete($recipe['id']);
-       logger()->info('Recipe deleted.', ['recipe_id'=> $recipe['id']]);
-       return $result;
+        $recipe = $this->getById($recipeId);
+        $result = $this->recipeRepository->delete($recipe['id']);
+        logger()->info('Recipe deleted.', ['recipe_id'=> $recipe['id']]);
+        return $result;
     }
 
     public function deleteAll()
     {
-       $result = $this->recipeRepository->deleteAll();
-       logger()->info('Recipes all deleted.');
-       return $result;
+        $result = $this->recipeRepository->deleteAll();
+        logger()->info('Recipes all deleted.');
+        return $result;
     }
-
 }

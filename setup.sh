@@ -33,3 +33,7 @@ printf "\n\n\n"
 docker exec -it ahsanatiq-recipe-service php vendor/bin/phinx migrate
 docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx migrate
 docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx seed:run
+printf "\n\n\n"
+echo "run consumer in the search service..."
+printf "\n\n\n"
+docker exec -it ahsanatiq-search-service nohup /usr/bin/php /server/http/console.php consume:recipes &

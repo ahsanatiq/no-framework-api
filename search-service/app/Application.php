@@ -89,8 +89,7 @@ class Application
         $commandArgs = parseFileArguments();
         if (isset($_SERVER['HTTP_APP_ENV']) && !empty($_SERVER['HTTP_APP_ENV'])) {
             $envFile = __DIR__.'/../.env.'.$_SERVER['HTTP_APP_ENV'];
-        }
-        else if (isset($commandArgs['env']) && !empty($commandArgs['env'])) {
+        } elseif (isset($commandArgs['env']) && !empty($commandArgs['env'])) {
             $envFile = __DIR__.'/../.env.'.$commandArgs['env'];
         }
         if (!empty($envFile) && file_exists($envFile)) {

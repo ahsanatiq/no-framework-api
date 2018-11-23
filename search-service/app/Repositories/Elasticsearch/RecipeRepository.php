@@ -16,8 +16,7 @@ class RecipeRepository implements RecipeRepositoryInterface
     {
         $this->elasticsearch = $elasticsearch;
 
-        if(!$this->indexExists())
-        {
+        if (!$this->indexExists()) {
             $this->indexCreate();
         }
     }
@@ -46,8 +45,7 @@ class RecipeRepository implements RecipeRepositoryInterface
         $total = 0;
         if (!empty($response['hits']['hits'])) {
             $total = $response['hits']['total'];
-            foreach($response['hits']['hits'] as $row)
-            {
+            foreach ($response['hits']['hits'] as $row) {
                 $items[] = $row['_source'];
             }
         }
@@ -91,7 +89,7 @@ class RecipeRepository implements RecipeRepositoryInterface
                 'body' => $data
             ]);
             logger()->info('recipe created:', [$response]);
-            if($response) {
+            if ($response) {
                 return $data;
             }
             throw new UnexpectedException;
@@ -111,7 +109,7 @@ class RecipeRepository implements RecipeRepositoryInterface
                 'body' => ['doc' => $data]
             ]);
             logger()->info('recipe updated:', [$response]);
-            if($response) {
+            if ($response) {
                 return array_merge($recipe, $data);
             }
             throw new UnexpectedException;
@@ -130,7 +128,7 @@ class RecipeRepository implements RecipeRepositoryInterface
                 'id' => $recipeId,
             ]);
             logger()->info('recipe deleted:', [$response]);
-            if($response) {
+            if ($response) {
                 return true;
             }
             throw new UnexpectedException;
@@ -142,19 +140,18 @@ class RecipeRepository implements RecipeRepositoryInterface
     public function deleteAll()
     {
         try {
-
             $response = $this->elasticsearch->deleteByQuery([
                 'index' => config()->get('db.elasticsearch.recipes_index'),
                 'type' => 'all',
                 'body' => [
                     'query' => [
-                        'match_all' => (object)[]
+                        'match_all' => (object) []
                     ],
                     'conflicts' => 'proceed'
                 ],
             ]);
             logger()->info('recipes all deleted:', [$response]);
-            if($response) {
+            if ($response) {
                 return true;
             }
             throw new UnexpectedException;

@@ -55,8 +55,6 @@
     <file>./database/</file>
     <file>./public/</file>
     <file>./routes/</file>
-    <file>./tests/acceptance/</file>
-    <file>./tests/unit/</file>
 
     <arg name="extensions" value="php"/>
 </ruleset>

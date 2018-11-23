@@ -24,7 +24,7 @@ class ExceptionHandler
             case $e instanceof MethodNotAllowedHttpException:
                 $data = (new AppNotFoundHttpException)->getData();
                 break;
-             case $e instanceof \Elasticsearch\Common\Exceptions\Missing404Exception:
+            case $e instanceof \Elasticsearch\Common\Exceptions\Missing404Exception:
                 $data = (new RecipeNotFoundException)->getData();
                 break;
             case $e instanceof \Elasticsearch\Common\Exceptions\BadRequest400Exception:
@@ -46,7 +46,7 @@ class ExceptionHandler
             'trace' => $e->getTrace()
         ];
 
-        logger()->$loggerLevel('Exception occured.', array_merge($data,$extraInfo));
+        logger()->$loggerLevel('Exception occured.', array_merge($data, $extraInfo));
 
         if (config()->get('app.env') != 'production') {
             $data = array_merge($data, $extraInfo);

@@ -30,7 +30,11 @@ class OauthController extends BaseController
             die;
         }
         $this->oauth->handleAuthorizeRequest($request, $response, true);
-        $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
+        $code = substr(
+            $response->getHttpHeader('Location'),
+            strpos($response->getHttpHeader('Location'), 'code=')+5,
+            40
+        );
         logger()->info('Authorize code granted.');
         return ['success'=>true, 'code'=> $code];
     }

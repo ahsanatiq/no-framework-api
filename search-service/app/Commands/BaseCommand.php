@@ -9,21 +9,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class BaseCommand extends SymfonyCommand
 {
 
-    public function __construct()
+    public function beforeExecute(InputInterface $input) // , OutputInterface $output
     {
-        parent::__construct();
-    }
-
-    public function beforeExecute(InputInterface $input, OutputInterface $output)
-    {
-        if($input->getOption('env') != config()->get('app.env'))
-        {
+        if ($input->getOption('env') != config()->get('app.env')) {
             $envFile = __DIR__.'/../../.env.'.$input->getOption('env');
         }
-        if(!empty($envFile) && file_exists($envFile))
-        {
+        if (!empty($envFile) && file_exists($envFile)) {
             loadEnvironmentFromFile($envFile);
         }
     }
-
 }

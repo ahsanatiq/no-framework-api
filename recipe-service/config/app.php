@@ -11,4 +11,4 @@
     'log_days'       => getenv('APP_LOG_DAYS') ?: '7',
     'log_level'      => getenv('APP_LOG_LEVEL') ?: 'DEBUG',
     'queue'          => getenv('APP_QUEUE') ?: 'default',
-];
+ ];
