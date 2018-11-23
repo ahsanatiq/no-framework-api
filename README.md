@@ -53,11 +53,15 @@ $ docker exec -it ahsanatiq-oauth-service composer install
 $ docker exec -it ahsanatiq-search-service composer install
 $ docker exec -it ahsanatiq-web-service composer install
 $ docker exec -it ahsanatiq-recipe-postgres createdb -U hellofresh -O hellofresh hellofresh_testing
+$ docker exec -it ahsanatiq-postgres-oauth createdb -U hellofresh -O hellofresh hellofresh_testing
 $ docker exec -it ahsanatiq-oauth-service openssl genrsa -out /server/keys/id_rsa 2048
 $ docker exec -it ahsanatiq-oauth-service openssl rsa -in /server/keys/id_rsa -pubout -out /server/keys/id_rsa.pub
 $ docker exec -it ahsanatiq-recipe-service php vendor/bin/phinx migrate
 $ docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx migrate
 $ docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx seed:run
+$ docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx migrate -e testing
+$ docker exec -it ahsanatiq-oauth-service php vendor/bin/phinx seed:run -e testing
+$ docker exec ahsanatiq-search-service nohup /usr/bin/php /server/http/console.php consume:recipes &
 ```
 
 Now you can access the application via http://localhost:8000.
