@@ -1,0 +1,22 @@
+{
+    "name": "ahsan/web-service",
+    "description": "Hellofresh Web Service",
+    "license": "MIT",
+    "type": "project",
+    "autoload": {
+    	"psr-4": {
+    		"Tests\\": "tests/"
+    	}
+    },
+    "require": {
+        "php": "~7.2.0",
+        "symfony/dotenv": "^4.1",
+        "fzaninotto/faker": "^1.8",
+        "vlucas/phpdotenv": "^2.5"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.5",
+        "codeception/c3": "^2.4",
+        "elasticsearch/elasticsearch": "^6.0"
+    }
+}

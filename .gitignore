@@ -1,0 +1,16 @@
+# SublimeText
+*.sublime-project
+*.sublime-workspace
+# Composer
+vendor
+# PHPStorm
+.idea/
+# environment file
+.env
+# Codeception
+recipe-service/tests/_data
+recipe-service/tests/_output
+# Mac
+.DS_Store
+# Docker Volumes
+data/

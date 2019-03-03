@@ -1,68 +1,113 @@
 version: '2'
 services:
-
-    # Application container
-    php:
-        build: .
+# Web Service container
+    web-service:
+        container_name: ahsanatiq-web-service
+        build: ./web-service
         restart: unless-stopped
         volumes:
-            - ./:/server/http
+            - ./web-service:/server/http
+            - ./data/logs:/server/logs
         ports:
-            - "80:80"
-            - "443:443"
-        links:
-            - postgres
-            - mongodb
+            - "8000:80"
+            - "4430:443"
+        depends_on:
+            - recipe-service
+            - oauth-service
+            - search-service
+        env_file:
+            - ./web-service/.env
+# Recipe Service container
+    recipe-service:
+        container_name: ahsanatiq-recipe-service
+        build: ./recipe-service
+        restart: unless-stopped
+        volumes:
+            - ./recipe-service:/server/http
+            - ./data/keys:/server/keys
+            - ./data/logs:/server/logs
+        ports:
+            - "8001:80"
+            - "4431:443"
+        depends_on:
+            - recipe-postgres
+            - oauth-service
             - redis
-        environment:
-            DEBUG: 'true'
-
-    #python:
-        #image: python:3.6
-        #environment:
-          #- DEBUG: 'true
-          #- PORT: '8080'
-        #volumes:
-          #- ./:/server/http
-        #links:
-            #- postgres
-            #- mongodb
-            #- redis
-        #ports:
-          #- "8080:8080"
-
-    #go:
-        #image: golang:1.8-alpine
-        #ports:
-            #- "80:8080"
-        #links:
-            #- postgres
-            #- mongodb
-            #- redis
-        #environment:
-            #DEBUG: 'true'
-            #PORT: '8080'
-
-    postgres:
+        env_file:
+            - ./recipe-service/.env
+# Postgres container for Recipe Service
+    recipe-postgres:
+        container_name: ahsanatiq-recipe-postgres
         image: onjin/alpine-postgres:9.5
         restart: unless-stopped
         ports:
-            - "5432:5432"
+            - "54321:5432"
+        volumes:
+            - ./data/postgres:/var/lib/postgresql/data
         environment:
             LC_ALL: C.UTF-8
             POSTGRES_USER: hellofresh
             POSTGRES_PASSWORD: hellofresh
             POSTGRES_DB: hellofresh
-
-    mongodb:
-        image: mvertes/alpine-mongo:3.2.3
+# OAuth Service container
+    oauth-service:
+        container_name: ahsanatiq-oauth-service
+        build: ./oauth-service
+        restart: unless-stopped
+        volumes:
+            - ./oauth-service:/server/http
+            - ./data/keys:/server/keys
+            - ./data/logs:/server/logs
+        ports:
+            - "8002:80"
+            - "4432:443"
+        depends_on:
+            - postgres-oauth
+        env_file:
+            - ./oauth-service/.env
+# Postgres for OAuth container
+    postgres-oauth:
+        container_name: ahsanatiq-postgres-oauth
+        image: onjin/alpine-postgres:9.5
         restart: unless-stopped
         ports:
-            - "27017:27017"
-
+            - "54322:5432"
+        volumes:
+            - ./data/postgres-auth:/var/lib/postgresql/data
+        environment:
+            LC_ALL: C.UTF-8
+            POSTGRES_USER: hellofresh
+            POSTGRES_PASSWORD: hellofresh
+            POSTGRES_DB: hellofresh
+# Search Service container
+    search-service:
+        container_name: ahsanatiq-search-service
+        build: ./search-service
+        restart: unless-stopped
+        volumes:
+            - ./search-service:/server/http
+            - ./data/logs:/server/logs
+        ports:
+            - "8003:80"
+            - "4433:443"
+        depends_on:
+            - elasticsearch
+            - redis
+        env_file:
+            - ./search-service/.env
+# Elasticsearch container for Search service
+    elasticsearch:
+        container_name: ahsanatiq-elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
+        restart: unless-stopped
+        ports:
+          - 9201:9200
+        volumes:
+          - ./data/elasticsearch:/usr/share/elasticsearch/data
+# Redis container for Message Queue
     redis:
+        container_name: ahsanatiq-redis
         image: sickp/alpine-redis:3.2.2
         restart: unless-stopped
         ports:
-            - "6379:6379"
-
+            - "63791:6379"

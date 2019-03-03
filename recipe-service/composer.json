@@ -1,0 +1,42 @@
+{
+    "name": "ahsan/recipe-service",
+    "description": "Hellofresh Recipe API Service",
+    "license": "MIT",
+    "type": "project",
+    "autoload": {
+    	"psr-4": {
+    		"App\\": "app/",
+    		"Tests\\": "tests/"
+    	},
+    	"files": [
+    		"app/helpers.php"
+    	]
+    },
+    "require": {
+        "php": "~7.2.0",
+        "illuminate/container": "^5.7.0",
+        "illuminate/routing": "^5.7.0",
+        "illuminate/config": "^5.7.0",
+        "illuminate/database": "^5.7.0",
+        "illuminate/events": "^5.7.0",
+        "illuminate/validation": "^5.7.0",
+        "illuminate/pagination": "^5.7",
+        "league/fractal": "^0.17.0",
+        "robmorgan/phinx": "^0.10.6",
+        "symfony/dotenv": "^4.1",
+        "symfony/finder": "^4.1",
+        "fzaninotto/faker": "^1.8",
+        "vlucas/phpdotenv": "^2.5",
+        "jwage/purl": "^0.0.10",
+        "lcobucci/jwt": "^3.2",
+        "monolog/monolog": "^1.24",
+        "illuminate/queue": "^5.7",
+        "illuminate/redis": "^5.7"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.5",
+        "codeception/c3": "^2.4",
+        "squizlabs/php_codesniffer": "^3.3",
+        "elasticsearch/elasticsearch": "^6.0"
+    }
+}

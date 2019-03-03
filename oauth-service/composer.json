@@ -1,0 +1,30 @@
+{
+    "name": "ahsan/oauth-service",
+    "description": "Hellofresh OAuth2 API Service",
+    "license": "MIT",
+    "type": "project",
+    "autoload": {
+    	"psr-4": {
+    		"App\\": "app/"
+    	},
+    	"files": [
+    		"app/helpers.php"
+    	]
+    },
+    "require": {
+        "php": "~7.2.0",
+        "illuminate/container": "^5.7.0",
+        "illuminate/routing": "^5.7.0",
+        "illuminate/config": "^5.7.0",
+        "robmorgan/phinx": "^0.10.6",
+        "symfony/dotenv": "^4.1",
+        "symfony/finder": "^4.1",
+        "vlucas/phpdotenv": "^2.5",
+        "bshaffer/oauth2-server-php": "^1.10.0",
+        "illuminate/events": "^5.7",
+        "monolog/monolog": "^1.24"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.3"
+    }
+}
