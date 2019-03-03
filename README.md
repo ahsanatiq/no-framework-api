@@ -83,6 +83,3 @@ $ docker exec -it ahsanatiq-web-service php vendor/bin/codecept run
 ### API documentation
 
 You can access the public API documentation at [Postman](https://documenter.getpostman.com/view/23622/RzZDjxNb). To import and run all the API's, click "Run In Postman" on top bar, after installing and importing you will see the new collection as "HelloFresh-Recipes API". To access the protected API's, you need to run generate the token first from "Authentication -> Get Token" endpoint. Then update the "access_Token" in the "HelloFresh-Dev" environment setting by clicking on the top-right corner inside postman app.
-
-
-
