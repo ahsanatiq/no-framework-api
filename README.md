@@ -31,7 +31,7 @@ Development environment requirements:
 Setting up your development environment on your local machine using setup script:
 
 ```bash
-$ git clone https://github.com/hellofreshdevtests/ahsanatiq-api-test.git
+$ git clone https://github.com/ahsanatiq/no-framework-api
 $ cd ahsanatiq-api-test
 $ git checkout dev
 $ ./setup.sh
@@ -40,7 +40,7 @@ $ ./setup.sh
 Manual setup:
 
 ```bash
-$ git clone https://github.com/hellofreshdevtests/ahsanatiq-api-test.git
+$ git clone https://github.com/ahsanatiq/no-framework-api
 $ cd ahsanatiq-api-test
 $ git checkout dev
 $ cp recipe-service/.env.dev recipe-service/.env
